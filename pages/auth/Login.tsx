@@ -35,7 +35,7 @@ const Login = () => {
           <h1 className="text-2xl font-bold tracking-wide">RAI ENVIOS</h1>
           <p className="text-xs text-blue-100 mt-1 uppercase tracking-wider opacity-90">BPM Terminal - Sistema de Produtividade</p>
         </div>
-        
+
         <div className="p-8 space-y-6">
           <div>
             <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest text-center mb-4">Acesso Rápido (Desenvolvimento)</h2>
@@ -48,7 +48,7 @@ const Login = () => {
                 <span className="material-icons-round text-blue-600 mb-1">verified_user</span>
                 <span className="text-[10px] font-semibold text-gray-600">Admin</span>
               </button>
-              <button onClick={() => alert("Acesso TI em manutenção.")} className="flex flex-col items-center justify-center p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition border border-transparent hover:border-blue-200">
+              <button onClick={() => navigate('/ti')} className="flex flex-col items-center justify-center p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition border border-transparent hover:border-blue-200">
                 <span className="material-icons-round text-blue-600 mb-1">computer</span>
                 <span className="text-[10px] font-semibold text-gray-600">TI</span>
               </button>
@@ -64,10 +64,10 @@ const Login = () => {
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">E-mail Corporativo</label>
-              <input 
-                className="block w-full pl-4 pr-4 py-3 text-sm text-gray-900 bg-gray-50 border border-transparent focus:ring-2 focus:ring-blue-600 focus:bg-white rounded-lg transition-all outline-none" 
-                placeholder="exemplo@pm.go.gov.br" 
-                type="email" 
+              <input
+                className="block w-full pl-4 pr-4 py-3 text-sm text-gray-900 bg-gray-50 border border-transparent focus:ring-2 focus:ring-blue-600 focus:bg-white rounded-lg transition-all outline-none"
+                placeholder="exemplo@pm.go.gov.br"
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />

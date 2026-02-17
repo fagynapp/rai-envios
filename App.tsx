@@ -19,7 +19,8 @@ import {
   AdminAlmanaque,
   AdminRanking,
   AdminBancoDados,
-  AdminConfiguracoes
+  AdminConfiguracoes,
+  TiDashboard
 } from './pages';
 import { PoliceProvider, usePoliceData } from './contexts/PoliceContext';
 
@@ -31,8 +32,8 @@ const SidebarItem = ({ icon, label, to, active, onClick, collapsed }: { icon: st
     onClick={onClick}
     title={collapsed ? label : ''} // Tooltip nativo quando colapsado
     className={`flex items-center gap-3 py-3 font-medium rounded-lg transition-all duration-200 ${active
-        ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
-        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+      ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
       } ${collapsed ? 'justify-center px-2' : 'px-4'}`}
   >
     <span className="material-icons-round text-[20px]">{icon}</span>
@@ -295,6 +296,9 @@ const App = () => {
             <Route path="db" element={<AdminBancoDados />} />
             <Route path="config" element={<AdminConfiguracoes />} />
           </Route>
+
+          {/* TI Route (Standalone) */}
+          <Route path="/ti" element={<TiDashboard />} />
 
           {/* User Routes */}
           <Route path="/user" element={<UserLayout />}>

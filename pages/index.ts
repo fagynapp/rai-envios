@@ -16,3 +16,4 @@ export { default as AdminAlmanaque } from './admin/Almanaque';
 export { default as AdminRanking } from './admin/Ranking';
 export { default as AdminBancoDados } from './admin/BancoDados';
 export { default as AdminConfiguracoes } from './admin/Configuracoes';
+export { default as TiDashboard } from './ti/TiDashboard';
