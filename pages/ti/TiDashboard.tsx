@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../../services/supabase';
+
+// Helper for masking matricula
+const maskMatricula = (value: string) => {
+    return value
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1-$2')
+        .replace(/(-\d{1})\d+?$/, '$1');
+};
 
 const SidebarItem = ({ icon, label, active, onClick }: { icon: string; label: string; active?: boolean, onClick: () => void }) => (
     <button
@@ -20,12 +30,145 @@ const TiDashboard = () => {
     const [activeSection, setActiveSection] = useState('PAINEL');
     const [activeLogTab, setActiveLogTab] = useState('ACESSO');
 
-    // Mock Data for Table
-    const [users] = useState([
-        { id: 1, email: 'marcos.silva@policia.gov.br', nome: 'Marcos Antonio da Silva', matricula: '284.102-1', perfil: 'ADMINISTRADOR', nivel: 3, status: 'ATIVO', adm: true },
-        { id: 2, email: 'ana.costa@policia.gov.br', nome: 'Ana Paula Costa', matricula: '159.330-X', perfil: 'DELEGADO', nivel: 2, status: 'ATIVO', adm: false },
-        { id: 3, email: 'ricardo.lima@policia.gov.br', nome: 'Ricardo Lima Jr.', matricula: '442.115-3', perfil: 'ESCRIVÃO', nivel: 1, status: 'INATIVO', adm: false },
-    ]);
+    // State for Users
+    const [users, setUsers] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // Form State
+    const [formData, setFormData] = useState({
+        email: '',
+        nome: '',
+        matricula: '',
+        perfil: '',
+        nivel: 1,
+        status: 'ATIVO',
+        perm_adm: false
+    });
+
+    // Fetch Users from Supabase
+    const fetchUsers = async () => {
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from('policiais')
+                .select('*')
+                .order('nome', { ascending: true });
+
+            if (error) throw error;
+            setUsers(data || []);
+        } catch (error) {
+            console.error('Erro ao buscar usuários:', error);
+            alert('Erro ao carregar usuários.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (activeSection === 'USUARIOS') {
+            fetchUsers();
+        }
+    }, [activeSection]);
+
+    // Handle Form Input
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    // Handle Save (Create/Update)
+    const handleSaveUser = async () => {
+        if (!formData.nome || !formData.matricula) {
+            alert('Nome e Matrícula são obrigatórios.');
+            return;
+        }
+
+        try {
+            // First check if user exists by matricula
+            const { data: existingUser } = await supabase
+                .from('policiais')
+                .select('id')
+                .eq('matricula', formData.matricula)
+                .single();
+
+            if (existingUser) {
+                // Update
+                const { error } = await supabase
+                    .from('policiais')
+                    .update({
+                        email: formData.email,
+                        nome: formData.nome,
+                        perfil: formData.perfil || 'USER',
+                        nivel: formData.nivel || 1,
+                        status: formData.status,
+                        perm_adm: formData.perm_adm
+                    })
+                    .eq('matricula', formData.matricula);
+
+                if (error) throw error;
+
+                // LOG
+                await supabase.from('system_logs').insert({
+                    level: 'INFO',
+                    action: 'UPDATE_USER',
+                    details: { matricula_alvo: formData.matricula, changes: formData },
+                    matricula: 'ADMIN', // TODO: Get from context
+                    ip_address: '127.0.0.1'
+                });
+
+                alert('Usuário atualizado com sucesso!');
+            } else {
+                // Create
+                const { error } = await supabase
+                    .from('policiais')
+                    .insert([{
+                        email: formData.email,
+                        nome: formData.nome,
+                        matricula: formData.matricula,
+                        perfil: formData.perfil || 'USER',
+                        nivel: formData.nivel || 1,
+                        status: formData.status,
+                        perm_adm: formData.perm_adm
+                    }]);
+
+                if (error) throw error;
+
+                // LOG
+                await supabase.from('system_logs').insert({
+                    level: 'INFO',
+                    action: 'CREATE_USER',
+                    details: { matricula_alvo: formData.matricula, data: formData },
+                    matricula: 'ADMIN', // TODO: Get from context
+                    ip_address: '127.0.0.1'
+                });
+
+                alert('Usuário cadastrado com sucesso!');
+            }
+
+            // Reset form and refresh list
+            setFormData({
+                email: '',
+                nome: '',
+                matricula: '',
+                perfil: '',
+                nivel: 1,
+                status: 'ATIVO',
+                perm_adm: false
+            });
+            fetchUsers();
+
+        } catch (error) {
+            console.error('Erro ao salvar usuário:', error);
+            alert('Erro ao salvar usuário.');
+        }
+    };
+
+    // Filter Users
+    const filteredUsers = users.filter(user =>
+        user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.matricula.includes(searchTerm)
+    );
 
     return (
         <div className="flex h-screen bg-slate-50 font-inter">
@@ -69,11 +212,11 @@ const TiDashboard = () => {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                                     <div className="flex items-center justify-between mb-4">
-                                        <h3 className="font-bold text-slate-700">Usuários Ativos</h3>
+                                        <h3 className="font-bold text-slate-700">Usuários Totais</h3>
                                         <span className="material-icons-round text-green-500 bg-green-50 p-2 rounded-lg">person</span>
                                     </div>
-                                    <p className="text-3xl font-black text-slate-900">128</p>
-                                    <p className="text-xs text-slate-500 mt-1">+12 nesta semana</p>
+                                    <p className="text-3xl font-black text-slate-900">{users.length}</p>
+                                    <p className="text-xs text-slate-500 mt-1">Cadastrados no sistema</p>
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                                     <div className="flex items-center justify-between mb-4">
@@ -100,48 +243,82 @@ const TiDashboard = () => {
                             <h2 className="text-3xl font-black text-slate-900">Gerenciamento de Usuários</h2>
                             {/* Form: Novo Acesso */}
                             <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-                                <h3 className="text-lg font-bold text-slate-800 mb-6">Novo Acesso</h3>
+                                <h3 className="text-lg font-bold text-slate-800 mb-6">Novo Acesso / Edição</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                                     <div className="md:col-span-1">
                                         <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Email Corporativo</label>
-                                        <input className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500" placeholder="usuario@policia.gov.br" />
+                                        <input
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="usuario@policia.gov.br"
+                                        />
                                     </div>
                                     <div className="md:col-span-1">
                                         <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome Completo</label>
-                                        <input className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nome do Agente" />
+                                        <input
+                                            name="nome"
+                                            value={formData.nome}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="Nome do Agente"
+                                        />
                                     </div>
                                     <div className="md:col-span-1">
                                         <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Matrícula</label>
-                                        <input className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500" placeholder="000.000-0" />
+                                        <input
+                                            name="matricula"
+                                            value={formData.matricula}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, matricula: maskMatricula(e.target.value) }))}
+                                            className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="000.000-0"
+                                        />
                                     </div>
                                     <div className="md:col-span-1 flex items-end">
                                         <div className="w-full">
                                             <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Perfil de Acesso</label>
-                                            <select className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
-                                                <option>Selecionar perfil...</option>
-                                                <option>Administrador</option>
-                                                <option>Delegado</option>
-                                                <option>Escrivão</option>
+                                            <select
+                                                name="perfil"
+                                                value={formData.perfil}
+                                                onChange={handleInputChange}
+                                                className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500"
+                                            >
+                                                <option value="">Selecionar perfil...</option>
+                                                <option value="USER">USER - Policial (Padrão)</option>
+                                                <option value="ADM_N2">ADM_N2 - Adm. Operacional</option>
+                                                <option value="ADM_N3">ADM_N3 - Adm. Escalas</option>
+                                                <option value="ADM_N4">ADM_N4 - Supervisão</option>
+                                                <option value="TI">TI - Desenvolvedor</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-6">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-12 h-6 bg-blue-600 rounded-full p-1 cursor-pointer flex justify-end">
+                                        <div
+                                            className="flex items-center gap-3 cursor-pointer"
+                                            onClick={() => setFormData(prev => ({ ...prev, status: prev.status === 'ATIVO' ? 'INATIVO' : 'ATIVO' }))}
+                                        >
+                                            <div className={`w-12 h-6 rounded-full p-1 flex ${formData.status === 'ATIVO' ? 'bg-blue-600 justify-end' : 'bg-slate-200 justify-start'}`}>
                                                 <div className="w-4 h-4 bg-white rounded-full shadow-sm"></div>
                                             </div>
                                             <span className="text-sm font-medium text-slate-700">Ativo</span>
                                         </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-12 h-6 bg-slate-200 rounded-full p-1 cursor-pointer flex justify-start">
-                                                <div className="w-4 h-4 bg-white rounded-full shadow-sm border border-slate-100"></div>
+                                        <div
+                                            className="flex items-center gap-3 cursor-pointer"
+                                            onClick={() => setFormData(prev => ({ ...prev, perm_adm: !prev.perm_adm }))}
+                                        >
+                                            <div className={`w-12 h-6 rounded-full p-1 flex ${formData.perm_adm ? 'bg-blue-600 justify-end' : 'bg-slate-200 justify-start'}`}>
+                                                <div className="w-4 h-4 bg-white rounded-full shadow-sm"></div>
                                             </div>
                                             <span className="text-sm font-medium text-slate-700">Pode Acessar ADM</span>
                                         </div>
                                     </div>
-                                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold text-sm shadow-md shadow-blue-100 flex items-center gap-2 transition-colors">
+                                    <button
+                                        onClick={handleSaveUser}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold text-sm shadow-md shadow-blue-100 flex items-center gap-2 transition-colors"
+                                    >
                                         <span className="material-icons-round text-sm">save</span>
                                         Salvar
                                     </button>
@@ -150,9 +327,14 @@ const TiDashboard = () => {
                             {/* Table: Usuários Cadastrados */}
                             <div className="space-y-4">
                                 <div className="flex justify-between items-end">
-                                    <h3 className="text-lg font-bold text-slate-800">Usuários Cadastrados</h3>
+                                    <h3 className="text-lg font-bold text-slate-800">Usuários Cadastrados ({filteredUsers.length})</h3>
                                     <div className="relative">
-                                        <input className="bg-white border border-slate-200 rounded-lg pl-10 pr-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 w-64" placeholder="Filtrar por nome ou matrícula..." />
+                                        <input
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="bg-white border border-slate-200 rounded-lg pl-10 pr-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                                            placeholder="Filtrar por nome ou matrícula..."
+                                        />
                                         <span className="material-icons-round absolute left-3 top-2 text-slate-400 text-lg">search</span>
                                     </div>
                                 </div>
@@ -167,17 +349,26 @@ const TiDashboard = () => {
                                                 <th className="px-6 py-4">Nível</th>
                                                 <th className="px-6 py-4">Status</th>
                                                 <th className="px-6 py-4 text-center">Acesso ADM</th>
+                                                <th className="px-6 py-4"></th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-slate-100">
-                                            {users.map(user => (
+                                            {loading ? (
+                                                <tr><td colSpan={8} className="text-center py-8">Carregando...</td></tr>
+                                            ) : filteredUsers.map(user => (
                                                 <tr key={user.id} className="hover:bg-slate-50 transition-colors">
-                                                    <td className="px-6 py-4 text-slate-600">{user.email}</td>
+                                                    <td className="px-6 py-4 text-slate-600">{user.email || '-'}</td>
                                                     <td className="px-6 py-4 font-bold text-slate-800 w-1/4">{user.nome}</td>
                                                     <td className="px-6 py-4 font-mono text-slate-500">{user.matricula}</td>
                                                     <td className="px-6 py-4">
                                                         <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-[10px] font-bold uppercase border border-slate-200">
-                                                            {user.perfil}
+                                                            {{
+                                                                'USER': 'Policial (Padrão)',
+                                                                'ADM_N2': 'Adm. Operacional',
+                                                                'ADM_N3': 'Adm. Escalas',
+                                                                'ADM_N4': 'Supervisão',
+                                                                'TI': 'Desenvolvedor / TI'
+                                                            }[user.perfil as string] || user.perfil}
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4 font-bold text-slate-800">{user.nivel}</td>
@@ -188,7 +379,7 @@ const TiDashboard = () => {
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4 text-center">
-                                                        {user.adm ? (
+                                                        {user.perm_adm ? (
                                                             <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mx-auto text-white shadow-sm">
                                                                 <span className="material-icons-round text-sm">check</span>
                                                             </div>
@@ -197,6 +388,22 @@ const TiDashboard = () => {
                                                                 <span className="material-icons-round text-sm">close</span>
                                                             </div>
                                                         )}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <button
+                                                            onClick={() => setFormData({
+                                                                email: user.email || '',
+                                                                nome: user.nome,
+                                                                matricula: user.matricula,
+                                                                perfil: user.perfil,
+                                                                nivel: user.nivel,
+                                                                status: user.status || 'ATIVO',
+                                                                perm_adm: user.perm_adm || false
+                                                            })}
+                                                            className="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors"
+                                                        >
+                                                            <span className="material-icons-round">edit</span>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -217,30 +424,40 @@ const TiDashboard = () => {
                                 </button>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {['Administrador', 'Comandante', 'Oficial de Dia', 'Sargento de Dia', 'Auxiliar'].map((role, idx) => (
-                                    <div key={role} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow relative overflow-hidden group">
-                                        <div className={`absolute top-0 left-0 w-1 h-full ${idx === 0 ? 'bg-blue-600' : 'bg-slate-300'}`}></div>
+                                {[
+                                    { code: 'USER', label: 'Policial (Padrão)', desc: 'Acesso apenas ao MENU DO USUÁRIO.' },
+                                    { code: 'ADM_N2', label: 'Adm. Operacional', desc: 'Acessa o MENU ADM completo (Dispensas/Afastamentos).' },
+                                    { code: 'ADM_N3', label: 'Adm. Escalas', desc: 'Acessa módulos de Escala e Virtual.' },
+                                    { code: 'ADM_N4', label: 'Supervisão', desc: 'Acessa tudo do N2 + N3.' },
+                                    { code: 'TI', label: 'Desenvolvedor / TI', desc: 'Acesso total: USER + ADM + TI.' }
+                                ].map((role, idx) => (
+                                    <div key={role.code} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow relative overflow-hidden group">
+                                        <div className={`absolute top-0 left-0 w-1 h-full ${idx === 4 ? 'bg-purple-600' : (idx > 0 ? 'bg-blue-600' : 'bg-slate-300')}`}></div>
                                         <div className="flex justify-between items-start mb-4">
-                                            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-lg">
-                                                {role.charAt(0)}
+                                            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
+                                                {role.code.replace('ADM_', '')}
                                             </div>
                                             <button className="text-slate-400 hover:text-blue-600"><span className="material-icons-round">edit</span></button>
                                         </div>
-                                        <h4 className="font-bold text-slate-800">{role}</h4>
-                                        <p className="text-xs text-slate-500 mt-1 mb-4">Acesso total ao sistema de gestão e configurações.</p>
+                                        <h4 className="font-bold text-slate-800">{role.label}</h4>
+                                        <p className="text-xs text-slate-500 mt-1 mb-4">{role.desc}</p>
                                         <div className="space-y-2">
                                             <div className="flex items-center gap-2 text-xs text-slate-600">
                                                 <span className="material-icons-round text-green-500 text-sm">check_circle</span>
-                                                <span>Dashboard</span>
+                                                <span>Acesso ao Sistema</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-xs text-slate-600">
-                                                <span className="material-icons-round text-green-500 text-sm">check_circle</span>
-                                                <span>Relatórios PDF</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-xs text-slate-600">
-                                                <span className="material-icons-round ${idx === 0 ? 'text-green-500' : 'text-slate-300'} text-sm">{idx === 0 ? 'check_circle' : 'remove_circle'}</span>
-                                                <span>Gestão de Usuários</span>
-                                            </div>
+                                            {role.code !== 'USER' && (
+                                                <div className="flex items-center gap-2 text-xs text-slate-600">
+                                                    <span className="material-icons-round text-green-500 text-sm">check_circle</span>
+                                                    <span>Painel Admin</span>
+                                                </div>
+                                            )}
+                                            {role.code === 'TI' && (
+                                                <div className="flex items-center gap-2 text-xs text-slate-600">
+                                                    <span className="material-icons-round text-purple-500 text-sm">check_circle</span>
+                                                    <span>Configurações TI</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}

@@ -69,12 +69,12 @@ const AdminAuditoria = () => {
 
     // Filtro de Busca
     const term = search.toLowerCase();
-    const match = 
+    const match =
       item.numeroRai.includes(term) ||
       item.policial.toLowerCase().includes(term) ||
       item.matricula.includes(term) ||
       item.natureza.toLowerCase().includes(term);
-    
+
     return match;
   });
 
@@ -108,7 +108,7 @@ const AdminAuditoria = () => {
   };
 
   const handleSaveNote = (id: number) => {
-    setItems(prev => prev.map(item => 
+    setItems(prev => prev.map(item =>
       item.id === id ? { ...item, obs: noteText } : item
     ));
     alert("Anotação salva com sucesso!");
@@ -116,7 +116,7 @@ const AdminAuditoria = () => {
 
   // --- Ações de Aprovação/Reprovação ---
   const handleApprove = (id: number) => {
-    setItems(prev => prev.map(item => 
+    setItems(prev => prev.map(item =>
       item.id === id ? { ...item, status: 'APROVADO' } : item
     ));
   };
@@ -130,7 +130,7 @@ const AdminAuditoria = () => {
   const confirmReject = (e: React.FormEvent) => {
     e.preventDefault();
     if (rejectId !== null) {
-      setItems(prev => prev.map(item => 
+      setItems(prev => prev.map(item =>
         item.id === rejectId ? { ...item, status: 'REPROVADO', motivoReprovacao: rejectReason || 'Motivo não informado' } : item
       ));
       setShowRejectModal(false);
@@ -139,7 +139,7 @@ const AdminAuditoria = () => {
   };
 
   const handleRevert = (id: number) => {
-    setItems(prev => prev.map(item => 
+    setItems(prev => prev.map(item =>
       item.id === id ? { ...item, status: 'PENDENTE', motivoReprovacao: undefined } : item
     ));
   };
@@ -159,9 +159,9 @@ const AdminAuditoria = () => {
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingItem) {
-      setItems(prev => prev.map(item => 
-        item.id === editingItem.id ? { 
-          ...item, 
+      setItems(prev => prev.map(item =>
+        item.id === editingItem.id ? {
+          ...item,
           numeroRai: editFormData.numeroRai,
           natureza: editFormData.natureza,
           pontos: Number(editFormData.pontos),
@@ -176,7 +176,7 @@ const AdminAuditoria = () => {
 
   return (
     <div className="space-y-6">
-      
+
       {/* 1. DASHBOARD DE RESUMO */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
@@ -230,14 +230,14 @@ const AdminAuditoria = () => {
         <div className="relative w-full md:w-80">
           <div className="relative w-full">
             <span className="material-icons-round absolute left-3 top-2.5 text-slate-400">search</span>
-            <input 
-              className="w-full h-10 bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-10 text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder-slate-400" 
-              placeholder="RAI, Policial, Matrícula..." 
+            <input
+              className="w-full h-10 bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-10 text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder-slate-400"
+              placeholder="RAI, Policial, Matrícula..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
             {search && (
-              <button 
+              <button
                 onClick={() => setSearch('')}
                 className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
               >
@@ -249,7 +249,7 @@ const AdminAuditoria = () => {
 
         {/* Seletor de Abas - Ocupa toda a largura no mobile e alinha com a busca */}
         <div className="flex bg-slate-100 p-1 rounded-lg w-full md:w-auto">
-          <button 
+          <button
             onClick={() => setActiveTab('PENDENTES')}
             className={`flex-1 md:flex-none px-2 md:px-4 py-1.5 rounded-md text-[9px] md:text-xs font-bold uppercase transition-all flex items-center justify-center gap-1 md:gap-2 whitespace-nowrap ${activeTab === 'PENDENTES' ? 'bg-orange-500 text-white shadow-sm' : 'text-slate-500 hover:text-orange-600'}`}
           >
@@ -257,14 +257,14 @@ const AdminAuditoria = () => {
             Pendentes
             {stats.pendentes > 0 && <span className="ml-0.5 md:ml-1 bg-white/20 px-1 rounded text-[8px]">{stats.pendentes}</span>}
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('APROVADOS')}
             className={`flex-1 md:flex-none px-2 md:px-4 py-1.5 rounded-md text-[9px] md:text-xs font-bold uppercase transition-all flex items-center justify-center gap-1 md:gap-2 whitespace-nowrap ${activeTab === 'APROVADOS' ? 'bg-green-600 text-white shadow-sm' : 'text-slate-500 hover:text-green-600'}`}
           >
             <span className="material-icons-round text-sm">check_circle</span>
             Aprovados
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('REPROVADOS')}
             className={`flex-1 md:flex-none px-2 md:px-4 py-1.5 rounded-md text-[9px] md:text-xs font-bold uppercase transition-all flex items-center justify-center gap-1 md:gap-2 whitespace-nowrap ${activeTab === 'REPROVADOS' ? 'bg-red-600 text-white shadow-sm' : 'text-slate-500 hover:text-red-600'}`}
           >
@@ -295,115 +295,115 @@ const AdminAuditoria = () => {
               <tbody className="divide-y divide-slate-100">
                 {filteredList.map((item) => (
                   <React.Fragment key={item.id}>
-                    <tr 
-                        onClick={() => toggleExpand(item.id)}
-                        className={`transition-colors cursor-pointer group ${expandedRecordId === item.id ? 'bg-blue-50/50' : 'hover:bg-slate-50'}`}
+                    <tr
+                      onClick={() => toggleExpand(item.id)}
+                      className={`transition-colors cursor-pointer group ${expandedRecordId === item.id ? 'bg-blue-50/50' : 'hover:bg-slate-50'}`}
                     >
-                        <td className="px-4 py-3 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
-                            <span className={`material-icons-round text-lg transition-transform duration-200 text-gray-400 ${expandedRecordId === item.id ? 'rotate-180 text-blue-600' : ''}`}>
-                                expand_more
-                            </span>
-                            {formatDate(item.dataEnvio)}
-                        </td>
-                        <td className="px-4 py-3 text-center font-bold text-slate-700 text-xs">{formatDate(item.dataRai)}</td>
-                        <td className="px-4 py-3 font-mono text-blue-600 font-bold">{item.numeroRai}</td>
-                        <td className="px-4 py-3 text-slate-700 font-medium text-xs max-w-[150px] truncate" title={item.natureza}>{item.natureza}</td>
-                        <td className="px-4 py-3 text-center">
-                            <span className="bg-blue-50 text-blue-700 font-bold px-2 py-1 rounded border border-blue-100 text-xs">
-                            {item.pontos}
-                            </span>
-                        </td>
-                        <td className="px-4 py-3 font-bold text-slate-800 text-xs uppercase">
-                            <div>{item.policial}</div>
-                            <div className="text-[9px] text-slate-400 font-normal mt-0.5">Equipe {item.equipe}</div>
-                        </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-500 text-xs">{formatMatricula(item.matricula)}</td>
-                        
-                        {activeTab === 'REPROVADOS' && (
-                            <td className="px-4 py-3 text-xs text-red-500 italic max-w-[150px] truncate" title={item.motivoReprovacao}>
-                                {item.motivoReprovacao}
-                            </td>
-                        )}
+                      <td className="px-4 py-3 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
+                        <span className={`material-icons-round text-lg transition-transform duration-200 text-gray-400 ${expandedRecordId === item.id ? 'rotate-180 text-blue-600' : ''}`}>
+                          expand_more
+                        </span>
+                        {formatDate(item.dataEnvio)}
+                      </td>
+                      <td className="px-4 py-3 text-center font-bold text-slate-700 text-xs">{formatDate(item.dataRai)}</td>
+                      <td className="px-4 py-3 font-mono text-blue-600 font-bold">{item.numeroRai.padStart(8, '0')}</td>
+                      <td className="px-4 py-3 text-slate-700 font-medium text-xs max-w-[150px] truncate" title={item.natureza}>{item.natureza}</td>
+                      <td className="px-4 py-3 text-center">
+                        <span className="bg-blue-50 text-blue-700 font-bold px-2 py-1 rounded border border-blue-100 text-xs">
+                          {item.pontos}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-bold text-slate-800 text-xs uppercase">
+                        <div>{item.policial}</div>
+                        <div className="text-[9px] text-slate-400 font-normal mt-0.5">Equipe {item.equipe}</div>
+                      </td>
+                      <td className="px-4 py-3 text-center font-mono text-slate-500 text-xs">{formatMatricula(item.matricula)}</td>
 
-                        <td className="px-4 py-3 text-right">
+                      {activeTab === 'REPROVADOS' && (
+                        <td className="px-4 py-3 text-xs text-red-500 italic max-w-[150px] truncate" title={item.motivoReprovacao}>
+                          {item.motivoReprovacao}
+                        </td>
+                      )}
+
+                      <td className="px-4 py-3 text-right">
                         {activeTab === 'PENDENTES' && (
-                            <div className="flex justify-end gap-2">
-                            <button 
-                                onClick={(e) => { e.stopPropagation(); handleApprove(item.id); }} 
-                                className="flex items-center gap-1 bg-green-700 text-white border border-green-700 hover:bg-green-800 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-sm"
-                                title="Aprovar Registro"
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleApprove(item.id); }}
+                              className="flex items-center gap-1 bg-green-700 text-white border border-green-700 hover:bg-green-800 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-sm"
+                              title="Aprovar Registro"
                             >
-                                <span className="material-icons-round text-sm">check</span>
-                                Aprovar
+                              <span className="material-icons-round text-sm">check</span>
+                              Aprovar
                             </button>
-                            <button 
-                                onClick={(e) => { e.stopPropagation(); handleRejectClick(item.id); }} 
-                                className="flex items-center gap-1 bg-red-700 text-white border border-red-700 hover:bg-red-800 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-sm"
-                                title="Reprovar Registro"
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleRejectClick(item.id); }}
+                              className="flex items-center gap-1 bg-red-700 text-white border border-red-700 hover:bg-red-800 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-sm"
+                              title="Reprovar Registro"
                             >
-                                <span className="material-icons-round text-sm">close</span>
-                                Reprovar
+                              <span className="material-icons-round text-sm">close</span>
+                              Reprovar
                             </button>
-                            </div>
+                          </div>
                         )}
                         {(activeTab === 'APROVADOS' || activeTab === 'REPROVADOS') && (
-                            <div className="flex justify-end">
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); handleRevert(item.id); }} 
-                                    className="flex items-center gap-1 bg-slate-900 text-white border border-slate-900 hover:bg-slate-800 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-sm"
-                                    title="Reverter para Pendente"
-                                >
-                                    <span className="material-icons-round text-sm">undo</span>
-                                    Reverter
-                                </button>
-                            </div>
+                          <div className="flex justify-end">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleRevert(item.id); }}
+                              className="flex items-center gap-1 bg-slate-900 text-white border border-slate-900 hover:bg-slate-800 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-sm"
+                              title="Reverter para Pendente"
+                            >
+                              <span className="material-icons-round text-sm">undo</span>
+                              Reverter
+                            </button>
+                          </div>
                         )}
-                        </td>
+                      </td>
                     </tr>
 
                     {/* Linha Expandida (Accordion) */}
                     {expandedRecordId === item.id && (
-                        <tr className="bg-blue-50/20 border-b border-blue-100 animate-[fadeIn_0.2s_ease-out]">
-                            <td colSpan={9} className="px-6 py-4">
-                                <div className="flex flex-col gap-4 pl-4 border-l-4 border-blue-200 ml-4">
-                                    <div className="flex items-start justify-between">
-                                        <div className="w-full mr-4">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className="material-icons-round text-blue-500 text-sm">sticky_note_2</span>
-                                                <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Anotações Administrativas</span>
-                                            </div>
-                                            <textarea 
-                                                value={noteText}
-                                                onChange={(e) => setNoteText(e.target.value)}
-                                                className="w-full bg-white border border-slate-200 rounded-lg p-3 text-xs text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none shadow-sm"
-                                                rows={2}
-                                                placeholder="Escreva observações internas sobre este registro..."
-                                                onClick={(e) => e.stopPropagation()}
-                                            />
-                                            <div className="mt-2 flex gap-2">
-                                                <button 
-                                                    onClick={(e) => { e.stopPropagation(); handleSaveNote(item.id); }}
-                                                    className="text-[10px] font-bold bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 transition-colors"
-                                                >
-                                                    Salvar Nota
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="shrink-0 flex flex-col gap-2 border-l border-slate-100 pl-4">
-                                            <span className="text-[10px] font-bold text-slate-400 uppercase">Ações do Registro</span>
-                                            <button 
-                                                onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
-                                                className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-colors"
-                                            >
-                                                <span className="material-icons-round text-base">edit_note</span>
-                                                Editar Dados
-                                            </button>
-                                        </div>
-                                    </div>
+                      <tr className="bg-blue-50/20 border-b border-blue-100 animate-[fadeIn_0.2s_ease-out]">
+                        <td colSpan={9} className="px-6 py-4">
+                          <div className="flex flex-col gap-4 pl-4 border-l-4 border-blue-200 ml-4">
+                            <div className="flex items-start justify-between">
+                              <div className="w-full mr-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="material-icons-round text-blue-500 text-sm">sticky_note_2</span>
+                                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Anotações Administrativas</span>
                                 </div>
-                            </td>
-                        </tr>
+                                <textarea
+                                  value={noteText}
+                                  onChange={(e) => setNoteText(e.target.value)}
+                                  className="w-full bg-white border border-slate-200 rounded-lg p-3 text-xs text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none shadow-sm"
+                                  rows={2}
+                                  placeholder="Escreva observações internas sobre este registro..."
+                                  onClick={(e) => e.stopPropagation()}
+                                />
+                                <div className="mt-2 flex gap-2">
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); handleSaveNote(item.id); }}
+                                    className="text-[10px] font-bold bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 transition-colors"
+                                  >
+                                    Salvar Nota
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div className="shrink-0 flex flex-col gap-2 border-l border-slate-100 pl-4">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase">Ações do Registro</span>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
+                                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-colors"
+                                >
+                                  <span className="material-icons-round text-base">edit_note</span>
+                                  Editar Dados
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
                     )}
                   </React.Fragment>
                 ))}
@@ -413,10 +413,10 @@ const AdminAuditoria = () => {
         ) : (
           <div className="p-12 flex flex-col items-center justify-center text-center">
             <span className="material-icons-round text-slate-300 text-5xl mb-3">
-                {activeTab === 'PENDENTES' ? 'done_all' : 'search_off'}
+              {activeTab === 'PENDENTES' ? 'done_all' : 'search_off'}
             </span>
             <p className="text-slate-500 font-medium">
-                {activeTab === 'PENDENTES' ? 'Tudo limpo! Nenhuma pendência.' : 'Nenhum registro encontrado nesta aba.'}
+              {activeTab === 'PENDENTES' ? 'Tudo limpo! Nenhuma pendência.' : 'Nenhum registro encontrado nesta aba.'}
             </p>
           </div>
         )}
@@ -438,12 +438,12 @@ const AdminAuditoria = () => {
                 <span className="material-icons-round">close</span>
               </button>
             </div>
-            
+
             <form onSubmit={confirmReject} className="p-6 space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 uppercase mb-2">Motivo da Reprovação</label>
-                <textarea 
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-red-500 outline-none resize-none" 
+                <textarea
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-red-500 outline-none resize-none"
                   rows={3}
                   placeholder="Ex: RAI duplicado, fora do prazo, dados inconsistentes..."
                   value={rejectReason}
@@ -454,15 +454,15 @@ const AdminAuditoria = () => {
               </div>
 
               <div className="flex gap-3 justify-end pt-2">
-                <button 
-                  type="button" 
-                  onClick={() => setShowRejectModal(false)} 
+                <button
+                  type="button"
+                  onClick={() => setShowRejectModal(false)}
                   className="px-4 py-2 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
                 >
                   Cancelar
                 </button>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="px-6 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-lg shadow-red-200 transition-colors"
                 >
                   Confirmar Reprovação
@@ -489,63 +489,65 @@ const AdminAuditoria = () => {
                 <span className="material-icons-round">close</span>
               </button>
             </div>
-            
+
             <form onSubmit={handleSaveEdit} className="p-6 space-y-4">
-              
+
               <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg mb-4">
-                 <p className="text-xs text-blue-800 font-bold uppercase mb-1">Policial: {editingItem.policial}</p>
-                 <p className="text-[10px] text-blue-600">Matrícula: {formatMatricula(editingItem.matricula)}</p>
+                <p className="text-xs text-blue-800 font-bold uppercase mb-1">Policial: {editingItem.policial}</p>
+                <p className="text-[10px] text-blue-600">Matrícula: {formatMatricula(editingItem.matricula)}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                 <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nº RAI</label>
-                    <input 
-                        value={editFormData.numeroRai}
-                        onChange={(e) => setEditFormData({...editFormData, numeroRai: e.target.value})}
-                        className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-blue-600 outline-none"
-                    />
-                 </div>
-                 <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Data Ocorrência</label>
-                    <input 
-                        type="date"
-                        value={editFormData.dataRai}
-                        onChange={(e) => setEditFormData({...editFormData, dataRai: e.target.value})}
-                        className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-blue-600 outline-none"
-                    />
-                 </div>
-              </div>
-
-              <div>
-                 <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Natureza</label>
-                 <input 
-                    value={editFormData.natureza}
-                    onChange={(e) => setEditFormData({...editFormData, natureza: e.target.value})}
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nº RAI</label>
+                  <input
+                    value={editFormData.numeroRai}
+                    onChange={(e) => setEditFormData({ ...editFormData, numeroRai: e.target.value.replace(/\D/g, '').slice(0, 8) })}
+                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-blue-600 outline-none"
+                    maxLength={8}
+                    placeholder="00000000"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Data Ocorrência</label>
+                  <input
+                    type="date"
+                    value={editFormData.dataRai}
+                    onChange={(e) => setEditFormData({ ...editFormData, dataRai: e.target.value })}
                     className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-blue-600 outline-none"
-                 />
+                  />
+                </div>
               </div>
 
               <div>
-                 <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Pontuação</label>
-                 <input 
-                    type="number"
-                    value={editFormData.pontos}
-                    onChange={(e) => setEditFormData({...editFormData, pontos: Number(e.target.value)})}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-bold text-blue-600 focus:ring-2 focus:ring-blue-600 outline-none"
-                 />
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Natureza</label>
+                <input
+                  value={editFormData.natureza}
+                  onChange={(e) => setEditFormData({ ...editFormData, natureza: e.target.value })}
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-blue-600 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Pontuação</label>
+                <input
+                  type="number"
+                  value={editFormData.pontos}
+                  onChange={(e) => setEditFormData({ ...editFormData, pontos: Number(e.target.value) })}
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-bold text-blue-600 focus:ring-2 focus:ring-blue-600 outline-none"
+                />
               </div>
 
               <div className="flex gap-3 justify-end pt-4 border-t border-slate-100 mt-2">
-                <button 
-                  type="button" 
-                  onClick={() => setShowEditModal(false)} 
+                <button
+                  type="button"
+                  onClick={() => setShowEditModal(false)}
                   className="px-4 py-2 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
                 >
                   Cancelar
                 </button>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="px-6 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg shadow-blue-200 transition-colors"
                 >
                   Salvar Alterações

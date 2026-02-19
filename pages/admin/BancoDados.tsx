@@ -1,5 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import * as XLSX from 'xlsx';
+import { supabase } from '../../services/supabase';
 
 // --- Interfaces ---
 interface RaiRecord {
@@ -26,12 +27,12 @@ const MOCK_DB: RaiRecord[] = [
 const AdminBancoDados = () => {
   const [records, setRecords] = useState<RaiRecord[]>(MOCK_DB);
   const [search, setSearch] = useState('');
-  
+
   // --- Estados do Filtro de Datas Personalizado ---
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [activeFilterLabel, setActiveFilterLabel] = useState('Personalizado');
-  
+
   // Controles de Visibilidade dos Menus
   const [showDatePickerMenu, setShowDatePickerMenu] = useState(false);
   const [showCustomDateModal, setShowCustomDateModal] = useState(false);
@@ -87,7 +88,7 @@ const AdminBancoDados = () => {
     end.setDate(end.getDate() - daysBackEnd);
     const start = new Date();
     start.setDate(start.getDate() - daysBackStart);
-    
+
     setStartDate(start.toISOString().split('T')[0]);
     setEndDate(end.toISOString().split('T')[0]);
   };
@@ -127,23 +128,23 @@ const AdminBancoDados = () => {
 
   const handleFilterClick = (label: string, action?: () => void) => {
     if (label === 'Personalizado') {
-        setTempStartDate(startDate);
-        setTempEndDate(endDate);
-        setNoEndDate(!endDate);
-        setShowCustomDateModal(true);
-        setShowDatePickerMenu(false);
+      setTempStartDate(startDate);
+      setTempEndDate(endDate);
+      setNoEndDate(!endDate);
+      setShowCustomDateModal(true);
+      setShowDatePickerMenu(false);
     } else if (action) {
-        action();
-        setActiveFilterLabel(label);
-        setShowDatePickerMenu(false);
+      action();
+      setActiveFilterLabel(label);
+      setShowDatePickerMenu(false);
     }
   };
 
   const applyCustomDate = () => {
-      setStartDate(tempStartDate);
-      setEndDate(noEndDate ? '' : tempEndDate);
-      setActiveFilterLabel('Personalizado');
-      setShowCustomDateModal(false);
+    setStartDate(tempStartDate);
+    setEndDate(noEndDate ? '' : tempEndDate);
+    setActiveFilterLabel('Personalizado');
+    setShowCustomDateModal(false);
   };
 
   // --- Helpers ---
@@ -164,7 +165,7 @@ const AdminBancoDados = () => {
   };
 
   const getStatusColor = (status: string) => {
-    switch(status) {
+    switch (status) {
       case 'Sincronizado': return 'bg-green-50 text-green-700 border-green-100';
       case 'Pendente': return 'bg-orange-50 text-orange-700 border-orange-100';
       case 'Erro': return 'bg-red-50 text-red-700 border-red-100';
@@ -177,7 +178,7 @@ const AdminBancoDados = () => {
     return records.filter((item) => {
       // Filtro de Texto (Global)
       const term = search.toLowerCase();
-      const matchSearch = 
+      const matchSearch =
         item.numeroRai.includes(term) ||
         item.policial.toLowerCase().includes(term) ||
         item.matricula.includes(term) ||
@@ -223,9 +224,21 @@ const AdminBancoDados = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm("ATENÇÃO: Excluir este registro pode afetar a pontuação do policial. Deseja continuar?")) {
+      const record = records.find(r => r.id === id);
       setRecords(prev => prev.filter(r => r.id !== id));
+
+      // LOG
+      if (record) {
+        await supabase.from('system_logs').insert({
+          level: 'WARN',
+          action: 'DELETE_RAI_RECORD',
+          details: { rai: record.numeroRai, id: record.id },
+          matricula: 'ADMIN',
+          ip_address: '127.0.0.1'
+        });
+      }
     }
   };
 
@@ -244,7 +257,7 @@ const AdminBancoDados = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.numeroRai || !formData.matricula || !formData.dataRai) {
       alert("Campos obrigatórios: Nº RAI, Data RAI e Matrícula.");
@@ -253,6 +266,16 @@ const AdminBancoDados = () => {
 
     if (editingId) {
       setRecords(prev => prev.map(r => r.id === editingId ? { ...r, ...formData } : r));
+
+      // LOG
+      await supabase.from('system_logs').insert({
+        level: 'INFO',
+        action: 'UPDATE_RAI_RECORD',
+        details: { rai: formData.numeroRai, changes: formData },
+        matricula: 'ADMIN',
+        ip_address: '127.0.0.1'
+      });
+
     } else {
       const newRecord: RaiRecord = {
         id: Date.now(),
@@ -260,6 +283,15 @@ const AdminBancoDados = () => {
         origem: 'Manual'
       };
       setRecords(prev => [newRecord, ...prev]);
+
+      // LOG
+      await supabase.from('system_logs').insert({
+        level: 'INFO',
+        action: 'CREATE_RAI_RECORD',
+        details: { rai: formData.numeroRai, data: formData },
+        matricula: 'ADMIN',
+        ip_address: '127.0.0.1'
+      });
     }
     setIsModalOpen(false);
   };
@@ -280,8 +312,8 @@ const AdminBancoDados = () => {
       setTimeout(() => {
         alert("Arquivo processado com sucesso! (Simulação)");
         setRecords(prev => [
-            { id: Date.now(), dataEnvio: new Date().toISOString().split('T')[0], dataRai: '2024-02-01', numeroRai: '20249999999', natureza: 'Importado via Excel', policial: 'IMPORTADO AUTO', matricula: '00000', status: 'Pendente', origem: 'Importação' },
-            ...prev
+          { id: Date.now(), dataEnvio: new Date().toISOString().split('T')[0], dataRai: '2024-02-01', numeroRai: '20249999999', natureza: 'Importado via Excel', policial: 'IMPORTADO AUTO', matricula: '00000', status: 'Pendente', origem: 'Importação' },
+          ...prev
         ]);
       }, 1000);
       e.target.value = ''; // Reset input
@@ -290,7 +322,7 @@ const AdminBancoDados = () => {
 
   return (
     <div className="space-y-6">
-      
+
       {/* 1. DASHBOARD SUPERIOR */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center relative overflow-hidden">
@@ -334,128 +366,128 @@ const AdminBancoDados = () => {
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row gap-4 items-center justify-between z-20 relative">
         {/* Busca e Filtros Esquerdos */}
         <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto flex-1">
-            <div className="relative w-full md:w-80">
-                <span className="material-icons-round absolute left-3 top-2.5 text-slate-400">search</span>
-                <input 
-                    className="w-full h-10 bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-10 text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder-slate-400" 
-                    placeholder="RAI, Natureza, Policial..." 
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-                {search && (
-                    <button onClick={() => setSearch('')} className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
-                    <span className="material-icons-round text-lg">close</span>
-                    </button>
-                )}
-            </div>
-            
-            {/* SELETOR DE DATA PERSONALIZADO (NOVO ESTILO CLARO) */}
-            <div className="relative date-picker-container">
-              <button 
-                onClick={() => setShowDatePickerMenu(!showDatePickerMenu)}
-                className="h-10 px-4 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm"
-              >
-                <span className="material-icons-round text-lg text-slate-400">calendar_month</span>
-                <span>{activeFilterLabel}</span>
-                <span className="material-icons-round text-sm ml-1 text-slate-400">expand_more</span>
+          <div className="relative w-full md:w-80">
+            <span className="material-icons-round absolute left-3 top-2.5 text-slate-400">search</span>
+            <input
+              className="w-full h-10 bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-10 text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder-slate-400"
+              placeholder="RAI, Natureza, Policial..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button onClick={() => setSearch('')} className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                <span className="material-icons-round text-lg">close</span>
               </button>
-              
-              {/* Dropdown Menu Claro */}
-              {showDatePickerMenu && (
-                <div className="absolute top-12 left-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden py-2 animate-[fadeIn_0.1s_ease-out]">
-                  {filterOptions.map((option, idx) => (
-                    <button 
-                      key={idx}
-                      onClick={() => handleFilterClick(option.label, option.action)}
-                      className="w-full text-left px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors flex items-center justify-between"
-                    >
-                      {option.label}
-                      {activeFilterLabel === option.label && <span className="material-icons-round text-blue-600 text-xs">check</span>}
-                    </button>
-                  ))}
-                  <div className="border-t border-slate-100 my-1"></div>
-                  <button 
-                    onClick={() => handleFilterClick('Personalizado')}
-                    className="w-full text-left px-4 py-2 text-sm font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-2"
+            )}
+          </div>
+
+          {/* SELETOR DE DATA PERSONALIZADO (NOVO ESTILO CLARO) */}
+          <div className="relative date-picker-container">
+            <button
+              onClick={() => setShowDatePickerMenu(!showDatePickerMenu)}
+              className="h-10 px-4 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm"
+            >
+              <span className="material-icons-round text-lg text-slate-400">calendar_month</span>
+              <span>{activeFilterLabel}</span>
+              <span className="material-icons-round text-sm ml-1 text-slate-400">expand_more</span>
+            </button>
+
+            {/* Dropdown Menu Claro */}
+            {showDatePickerMenu && (
+              <div className="absolute top-12 left-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden py-2 animate-[fadeIn_0.1s_ease-out]">
+                {filterOptions.map((option, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleFilterClick(option.label, option.action)}
+                    className="w-full text-left px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors flex items-center justify-between"
                   >
-                    <span className="material-icons-round text-base">date_range</span>
-                    Personalizado
+                    {option.label}
+                    {activeFilterLabel === option.label && <span className="material-icons-round text-blue-600 text-xs">check</span>}
                   </button>
-                </div>
-              )}
-            </div>
+                ))}
+                <div className="border-t border-slate-100 my-1"></div>
+                <button
+                  onClick={() => handleFilterClick('Personalizado')}
+                  className="w-full text-left px-4 py-2 text-sm font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-2"
+                >
+                  <span className="material-icons-round text-base">date_range</span>
+                  Personalizado
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Botões de Ação Direita */}
         <div className="flex gap-2 w-full md:w-auto">
-             <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".csv, .xlsx" />
-             <button 
-                onClick={handleImportClick} 
-                className="w-10 h-10 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50 hover:border-green-200 transition-colors shadow-sm"
-                title="Importar Excel"
-             >
-                  <span className="material-icons-round text-2xl">upload_file</span>
-             </button>
-             
-             {/* PADRONIZAÇÃO DO BOTÃO + */}
-             <button onClick={handleNew} className="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center shadow-sm transition-colors" title="Novo Registro">
-                <span className="material-icons-round text-2xl">add</span>
-             </button>
+          <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".csv, .xlsx" />
+          <button
+            onClick={handleImportClick}
+            className="w-10 h-10 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50 hover:border-green-200 transition-colors shadow-sm"
+            title="Importar Excel"
+          >
+            <span className="material-icons-round text-2xl">upload_file</span>
+          </button>
+
+          {/* PADRONIZAÇÃO DO BOTÃO + */}
+          <button onClick={handleNew} className="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center shadow-sm transition-colors" title="Novo Registro">
+            <span className="material-icons-round text-2xl">add</span>
+          </button>
         </div>
       </div>
 
       {/* 3. TABELA DE DADOS */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden min-h-[400px]">
         {filteredRecords.length > 0 ? (
-            <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm whitespace-nowrap">
-                <thead className="bg-slate-50 border-b border-slate-100 text-[10px] text-slate-500 uppercase font-bold tracking-wider">
-                    <tr>
-                    <th className="px-6 py-4 text-center">Data Envio</th>
-                    <th className="px-6 py-4 text-center">Data RAI</th>
-                    <th className="px-6 py-4">Nº RAI</th>
-                    <th className="px-6 py-4">Natureza</th>
-                    <th className="px-6 py-4">Policial</th>
-                    <th className="px-6 py-4 text-center">Matrícula</th>
-                    <th className="px-6 py-4 text-center">Status</th>
-                    <th className="px-6 py-4 text-right">Ações</th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                    {filteredRecords.map((record) => (
-                    <tr key={record.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 text-center text-slate-500 text-xs">{formatDate(record.dataEnvio)}</td>
-                        <td className="px-6 py-4 text-center font-bold text-slate-700 text-xs">{formatDate(record.dataRai)}</td>
-                        <td className="px-6 py-4 font-mono text-blue-600 font-bold">{record.numeroRai}</td>
-                        <td className="px-6 py-4 text-slate-700 font-medium max-w-[200px] truncate" title={record.natureza}>{record.natureza}</td>
-                        <td className="px-6 py-4 font-bold text-slate-800 text-xs uppercase">{record.policial}</td>
-                        <td className="px-6 py-4 text-center font-mono text-slate-500 text-xs">{formatMatricula(record.matricula)}</td>
-                        <td className="px-6 py-4 text-center">
-                            <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase border ${getStatusColor(record.status)}`}>
-                                {record.status}
-                            </span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                            <div className="flex justify-end gap-2">
-                                <button onClick={() => handleEdit(record)} className="text-slate-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 transition-colors" title="Editar">
-                                <span className="material-icons-round text-lg">edit</span>
-                                </button>
-                                <button onClick={() => handleDelete(record.id)} className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors" title="Excluir">
-                                <span className="material-icons-round text-lg">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    ))}
-                </tbody>
-                </table>
-            </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-slate-50 border-b border-slate-100 text-[10px] text-slate-500 uppercase font-bold tracking-wider">
+                <tr>
+                  <th className="px-6 py-4 text-center">Data Envio</th>
+                  <th className="px-6 py-4 text-center">Data RAI</th>
+                  <th className="px-6 py-4">Nº RAI</th>
+                  <th className="px-6 py-4">Natureza</th>
+                  <th className="px-6 py-4">Policial</th>
+                  <th className="px-6 py-4 text-center">Matrícula</th>
+                  <th className="px-6 py-4 text-center">Status</th>
+                  <th className="px-6 py-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredRecords.map((record) => (
+                  <tr key={record.id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-4 text-center text-slate-500 text-xs">{formatDate(record.dataEnvio)}</td>
+                    <td className="px-6 py-4 text-center font-bold text-slate-700 text-xs">{formatDate(record.dataRai)}</td>
+                    <td className="px-6 py-4 font-mono text-blue-600 font-bold">{record.numeroRai.padStart(8, '0')}</td>
+                    <td className="px-6 py-4 text-slate-700 font-medium max-w-[200px] truncate" title={record.natureza}>{record.natureza}</td>
+                    <td className="px-6 py-4 font-bold text-slate-800 text-xs uppercase">{record.policial}</td>
+                    <td className="px-6 py-4 text-center font-mono text-slate-500 text-xs">{formatMatricula(record.matricula)}</td>
+                    <td className="px-6 py-4 text-center">
+                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase border ${getStatusColor(record.status)}`}>
+                        {record.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button onClick={() => handleEdit(record)} className="text-slate-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 transition-colors" title="Editar">
+                          <span className="material-icons-round text-lg">edit</span>
+                        </button>
+                        <button onClick={() => handleDelete(record.id)} className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors" title="Excluir">
+                          <span className="material-icons-round text-lg">delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
-             <div className="p-12 flex flex-col items-center justify-center text-center">
-              <span className="material-icons-round text-slate-300 text-5xl mb-3">search_off</span>
-              <p className="text-slate-500 font-medium">Nenhum registro encontrado.</p>
-              <p className="text-slate-400 text-xs mt-1">Verifique os filtros ou realize uma nova importação.</p>
-            </div>
+          <div className="p-12 flex flex-col items-center justify-center text-center">
+            <span className="material-icons-round text-slate-300 text-5xl mb-3">search_off</span>
+            <p className="text-slate-500 font-medium">Nenhum registro encontrado.</p>
+            <p className="text-slate-400 text-xs mt-1">Verifique os filtros ou realize uma nova importação.</p>
+          </div>
         )}
       </div>
 
@@ -473,79 +505,83 @@ const AdminBancoDados = () => {
               </div>
               <button onClick={() => setIsModalOpen(false)} className="hover:bg-white/20 p-1 rounded transition-colors"><span className="material-icons-round">close</span></button>
             </div>
-            
+
             <form onSubmit={handleSave} className="p-6 space-y-4">
-              
+
               <div className="grid grid-cols-2 gap-4">
-                 <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nº RAI</label>
-                    <input 
-                        name="numeroRai"
-                        value={formData.numeroRai}
-                        onChange={handleInputChange}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-black text-slate-900 focus:ring-2 focus:ring-blue-600 outline-none"
-                        placeholder="Ex: 2024000..."
-                        autoFocus
-                    />
-                 </div>
-                 <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Data RAI</label>
-                    <input 
-                        type="date"
-                        name="dataRai"
-                        value={formData.dataRai}
-                        onChange={handleInputChange}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
-                    />
-                 </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nº RAI</label>
+                  <input
+                    name="numeroRai"
+                    value={formData.numeroRai}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '').slice(0, 8);
+                      setFormData(prev => ({ ...prev, numeroRai: val }));
+                    }}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-black text-slate-900 focus:ring-2 focus:ring-blue-600 outline-none"
+                    placeholder="00000000"
+                    maxLength={8}
+                    autoFocus
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Data RAI</label>
+                  <input
+                    type="date"
+                    name="dataRai"
+                    value={formData.dataRai}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
+                  />
+                </div>
               </div>
 
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Natureza da Ocorrência</label>
-                <input 
-                    name="natureza"
-                    value={formData.natureza}
-                    onChange={handleInputChange}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
-                    placeholder="Descrição da natureza..."
+                <input
+                  name="natureza"
+                  value={formData.natureza}
+                  onChange={handleInputChange}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
+                  placeholder="Descrição da natureza..."
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                 <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Matrícula Policial</label>
-                    <input 
-                        name="matricula"
-                        value={formData.matricula}
-                        onChange={handleInputChange}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 outline-none"
-                        placeholder="00000"
-                        maxLength={5}
-                    />
-                 </div>
-                 <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Status</label>
-                    <select 
-                        name="status"
-                        value={formData.status}
-                        onChange={handleInputChange}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
-                    >
-                        <option value="Sincronizado">Sincronizado</option>
-                        <option value="Pendente">Pendente</option>
-                        <option value="Erro">Erro</option>
-                    </select>
-                 </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Matrícula Policial</label>
+                  <input
+                    name="matricula"
+                    value={formData.matricula}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-600 outline-none"
+                    placeholder="00000"
+                    maxLength={5}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Status</label>
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
+                  >
+                    <option value="Sincronizado">Sincronizado</option>
+                    <option value="Pendente">Pendente</option>
+                    <option value="Erro">Erro</option>
+                  </select>
+                </div>
               </div>
 
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nome Policial (Manual)</label>
-                <input 
-                    name="policial"
-                    value={formData.policial}
-                    onChange={handleInputChange}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 outline-none"
-                    placeholder="DIGITE O NOME..."
+                <input
+                  name="policial"
+                  value={formData.policial}
+                  onChange={handleInputChange}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm uppercase focus:ring-2 focus:ring-blue-600 outline-none"
+                  placeholder="DIGITE O NOME..."
                 />
                 <p className="text-[10px] text-slate-400 mt-1">* Para vínculo automático, certifique-se que a matrícula esteja correta.</p>
               </div>
@@ -562,68 +598,68 @@ const AdminBancoDados = () => {
       {/* 5. MODAL DE SELEÇÃO DE DATA (NOVO ESTILO CLARO) */}
       {showCustomDateModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-           <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-[fadeIn_0.2s_ease-out]">
-              <div className="p-4 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
-                  <span className="material-icons-round text-blue-600">calendar_month</span>
-                  <h3 className="font-bold text-slate-800 text-lg">Seleção de Data</h3>
-                  <button onClick={() => setShowCustomDateModal(false)} className="ml-auto text-slate-400 hover:text-slate-600 transition-colors">
-                      <span className="material-icons-round">close</span>
-                  </button>
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            <div className="p-4 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
+              <span className="material-icons-round text-blue-600">calendar_month</span>
+              <h3 className="font-bold text-slate-800 text-lg">Seleção de Data</h3>
+              <button onClick={() => setShowCustomDateModal(false)} className="ml-auto text-slate-400 hover:text-slate-600 transition-colors">
+                <span className="material-icons-round">close</span>
+              </button>
+            </div>
+
+            <div className="p-6 space-y-5">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Data Inicial</label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={tempStartDate}
+                    onChange={(e) => setTempStartDate(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
-              
-              <div className="p-6 space-y-5">
-                  <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Data Inicial</label>
-                      <div className="relative">
-                          <input 
-                              type="date"
-                              value={tempStartDate}
-                              onChange={(e) => setTempStartDate(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500"
-                          />
-                      </div>
-                  </div>
 
-                  <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Data Final</label>
-                      <div className="relative">
-                          <input 
-                              type="date"
-                              value={tempEndDate}
-                              onChange={(e) => setTempEndDate(e.target.value)}
-                              disabled={noEndDate}
-                              className={`w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 ${noEndDate ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          />
-                      </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                      <input 
-                        type="checkbox" 
-                        id="noEndDate"
-                        checked={noEndDate}
-                        onChange={(e) => setNoEndDate(e.target.checked)}
-                        className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <label htmlFor="noEndDate" className="text-sm text-slate-600 font-medium cursor-pointer select-none">Sem data final</label>
-                  </div>
-
-                  <div className="flex gap-3 pt-2">
-                      <button 
-                          onClick={applyCustomDate}
-                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors shadow-lg shadow-blue-200"
-                      >
-                          OK
-                      </button>
-                      <button 
-                          onClick={() => setShowCustomDateModal(false)}
-                          className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-2.5 rounded-lg transition-colors"
-                      >
-                          Cancelar
-                      </button>
-                  </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Data Final</label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={tempEndDate}
+                    onChange={(e) => setTempEndDate(e.target.value)}
+                    disabled={noEndDate}
+                    className={`w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 ${noEndDate ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  />
+                </div>
               </div>
-           </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="noEndDate"
+                  checked={noEndDate}
+                  onChange={(e) => setNoEndDate(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="noEndDate" className="text-sm text-slate-600 font-medium cursor-pointer select-none">Sem data final</label>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={applyCustomDate}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors shadow-lg shadow-blue-200"
+                >
+                  OK
+                </button>
+                <button
+                  onClick={() => setShowCustomDateModal(false)}
+                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-2.5 rounded-lg transition-colors"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
