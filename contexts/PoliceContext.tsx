@@ -56,6 +56,18 @@ export interface CpcQueueConfig {
   prazo: number;
 }
 
+// Interface para Afastamentos (Movida para Contexto Global)
+export interface Afastamento {
+  id: number;
+  nome: string;
+  matricula: string;
+  equipe: string;
+  status: 'Férias' | 'Licença' | 'Atestado' | 'Outros';
+  inicio: string;
+  retorno: string;
+  obs: string;
+}
+
 interface PoliceContextData {
   policiais: Policial[];
   setPoliciais: React.Dispatch<React.SetStateAction<Policial[]>>;
@@ -83,6 +95,10 @@ interface PoliceContextData {
   // Logotipo Global para Relatórios
   reportLogo: string | null;
   setReportLogo: React.Dispatch<React.SetStateAction<string | null>>;
+
+  // Estado Global de Afastamentos (Sincronização Admin <-> Admin Escala)
+  afastamentos: Afastamento[];
+  setAfastamentos: React.Dispatch<React.SetStateAction<Afastamento[]>>;
 }
 
 const PoliceContext = createContext<PoliceContextData>({} as PoliceContextData);
@@ -127,6 +143,13 @@ const INITIAL_NATUREZAS: NaturezaItem[] = [
     nga: 'Portaria Nº 22/2024', 
     ativo: false 
   },
+];
+
+const INITIAL_AFASTAMENTOS: Afastamento[] = [
+  { id: 1, nome: '1º SGT S. JUNIOR', matricula: '37123', equipe: 'ALPHA', status: 'Férias', inicio: '2024-01-01', retorno: '2024-01-30', obs: 'Férias regulamentares referente ao período de ...' },
+  { id: 2, nome: '3º SGT A. PEREIRA', matricula: '30100', equipe: 'BRAVO', status: 'Licença', inicio: '2023-10-15', retorno: '2024-04-15', obs: 'Licença prêmio conforme publicação em BI.' },
+  { id: 3, nome: 'CB M. SANTOS', matricula: '33000', equipe: 'CHARLIE', status: 'Atestado', inicio: '2024-01-10', retorno: '2024-01-17', obs: 'Atestado médico - CID M54.5' },
+  { id: 4, nome: 'SD D. FERREIRA', matricula: '37676', equipe: 'DELTA', status: 'Férias', inicio: '2024-01-05', retorno: '2024-02-04', obs: 'Segundo período de férias anuais.' },
 ];
 
 const initialPoliciais: Policial[] = [
@@ -237,12 +260,14 @@ export const PoliceProvider = ({ children }: { children?: ReactNode }) => {
   const [cpcQueue, setCpcQueue] = useState<CpcQueueItem[]>([]);
   const [cpcQueueConfig, setCpcQueueConfig] = useState<CpcQueueConfig | null>(null);
 
-  // Estado Global do Logotipo com Persistência
+  // Logotipo
   const [reportLogo, setReportLogo] = useState<string | null>(() => {
     return localStorage.getItem('global_report_logo');
   });
 
-  // Efeito para persistir o logo sempre que mudar
+  // Estado Global de Afastamentos (NOVO)
+  const [afastamentos, setAfastamentos] = useState<Afastamento[]>(INITIAL_AFASTAMENTOS);
+
   useEffect(() => {
     if (reportLogo) {
       localStorage.setItem('global_report_logo', reportLogo);
@@ -272,7 +297,9 @@ export const PoliceProvider = ({ children }: { children?: ReactNode }) => {
       cpcQueueConfig,
       setCpcQueueConfig,
       reportLogo,
-      setReportLogo
+      setReportLogo,
+      afastamentos, 
+      setAfastamentos 
     }}>
       {children}
     </PoliceContext.Provider>
