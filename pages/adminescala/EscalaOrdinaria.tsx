@@ -33,12 +33,12 @@ const EscalaDigital = () => {
   };
 
   // Componente de Célula de Input (Simula célula do Excel)
-  const ExcelInput = ({ 
-    id, 
-    placeholder = "", 
-    className = "", 
+  const ExcelInput = ({
+    id,
+    placeholder = "",
+    className = "",
     center = false,
-    bold = false 
+    bold = false
   }: { id: string, placeholder?: string, className?: string, center?: boolean, bold?: boolean }) => (
     <input
       type="text"
@@ -54,19 +54,19 @@ const EscalaDigital = () => {
   );
 
   return (
-    <div className="bg-gray-200 p-4 min-h-screen font-sans overflow-x-auto">
+    <div className="font-sans overflow-x-auto py-4">
       {/* CONTAINER PRINCIPAL (PAPEL) */}
       <div className="bg-white min-w-[1600px] border border-gray-400 shadow-xl mx-auto pb-10" style={{ printColorAdjust: 'exact' }}>
-        
+
         {/* =================================================================================
             1. CABEÇALHO SUPERIOR
            ================================================================================= */}
         <header className="flex border-b-2 border-black">
           {/* Logo e Título */}
           <div className="w-[200px] bg-[#4472c4] border-r border-white flex flex-col items-center justify-center p-2">
-             <div className="w-16 h-16 bg-white/20 rounded-full mb-1 flex items-center justify-center text-white text-[10px]">LOGO</div>
+            <div className="w-16 h-16 bg-white/20 rounded-full mb-1 flex items-center justify-center text-white text-[10px]">LOGO</div>
           </div>
-          
+
           <div className="flex-1 bg-[#4472c4] flex flex-col items-center justify-center py-2 text-white">
             <h1 className="text-3xl font-black uppercase tracking-wide">Escalas de Serviço - BPM Terminal</h1>
           </div>
@@ -74,18 +74,18 @@ const EscalaDigital = () => {
 
         {/* Sub-cabeçalho de Horários */}
         <div className="bg-[#d9d9d9] border-b-2 border-black text-center py-1">
-           <span className="text-sm font-black uppercase text-black">HORÁRIO DAS 05:00 ÀS 23:59 E CORUJÃO DAS 05H ÀS 05H</span>
+          <span className="text-sm font-black uppercase text-black">HORÁRIO DAS 05:00 ÀS 23:59 E CORUJÃO DAS 05H ÀS 05H</span>
         </div>
 
         {/* =================================================================================
             2. TABELA PRINCIPAL - OPERACIONAL
            ================================================================================= */}
         <div className="grid grid-cols-[40px_80px_100px_400px_1fr_1fr_1fr_1fr] border-l-2 border-r-2 border-black">
-          
+
           {/* --- HEADER DA TABELA --- */}
           {/* Linha 1: Títulos Fixos + Datas */}
           <div className="col-span-4 bg-[#4472c4] border-r border-white border-b border-white flex items-center justify-center text-white font-bold text-sm">
-             DESCRIÇÃO DETALHADA DA ÁREA
+            DESCRIÇÃO DETALHADA DA ÁREA
           </div>
           {DATES.map(d => (
             <div key={d.id} className="bg-[#ffff00] border-r border-black border-b border-black text-center p-1">
@@ -98,7 +98,7 @@ const EscalaDigital = () => {
           <div className="bg-[#4472c4] text-white flex items-center justify-center border-r border-white border-b-2 border-black text-xs font-bold">ÁREA</div>
           <div className="bg-[#4472c4] text-white flex items-center justify-center border-r border-white border-b-2 border-black text-xs font-bold">FUNCIONAL</div>
           <div className="bg-[#4472c4] text-white flex items-center justify-center border-r border-black border-b-2 border-black text-xs font-bold">DESCRIÇÃO</div>
-          
+
           {DATES.map(d => (
             <div key={`pel-${d.id}`} className="bg-[#4472c4] border-r border-black border-b-2 border-black text-center p-1">
               <span className="text-xs font-bold text-white uppercase">{d.team}</span>
@@ -107,8 +107,8 @@ const EscalaDigital = () => {
 
           {/* --- CORPO DA TABELA (ÁREAS) --- */}
           {AREAS.map((area, idx) => {
-             const rowColor = idx % 2 === 0 ? 'bg-[#e9eff7]' : 'bg-white'; // Alternância sutil
-             return (
+            const rowColor = idx % 2 === 0 ? 'bg-[#e9eff7]' : 'bg-white'; // Alternância sutil
+            return (
               <React.Fragment key={area.id}>
                 {/* Colunas Fixas */}
                 <div className={`row-span-2 ${rowColor} border-r border-black border-b border-black flex items-center justify-center font-black text-sm`}>{area.id}</div>
@@ -136,73 +136,73 @@ const EscalaDigital = () => {
                   </div>
                 ))}
               </React.Fragment>
-             );
+            );
           })}
 
           {/* =================================================================================
               3. EQUIPE DE PRONTO EMPREGO – EPE / CDC
              ================================================================================= */}
-          
+
           {/* Header EPE */}
           <div className="col-span-4 bg-[#4472c4] border-r-2 border-black border-b border-black h-6"></div> {/* Spacer Left */}
           {DATES.map(d => (
-             <div key={`epe-header-${d.id}`} className="bg-[#4472c4] text-white text-center text-xs font-bold border-r border-black border-b border-black h-6 flex items-center justify-center">
-                EPE / CDC
-             </div>
+            <div key={`epe-header-${d.id}`} className="bg-[#4472c4] text-white text-center text-xs font-bold border-r border-black border-b border-black h-6 flex items-center justify-center">
+              EPE / CDC
+            </div>
           ))}
 
           {/* Rows EPE (3 Equipes) */}
           {[1, 2, 3].map((epeId) => (
             <React.Fragment key={`epe-row-${epeId}`}>
-               {/* Fixed Info */}
-               <div className="bg-[#d9e1f2] border-r border-black border-b border-black flex items-center justify-center font-black text-sm">REC</div>
-               <div className="bg-white border-r border-black border-b border-black flex items-center justify-center text-xs">-</div>
-               <div className="bg-white border-r border-black border-b border-black"></div>
-               <div className="bg-[#e7e6e6] border-r-2 border-black border-b border-black px-2 flex items-center font-bold text-xs uppercase">
-                  EQUIPE DE PRONTO EMPREGO - EPE/CDC {epeId}
-               </div>
+              {/* Fixed Info */}
+              <div className="bg-[#d9e1f2] border-r border-black border-b border-black flex items-center justify-center font-black text-sm">REC</div>
+              <div className="bg-white border-r border-black border-b border-black flex items-center justify-center text-xs">-</div>
+              <div className="bg-white border-r border-black border-b border-black"></div>
+              <div className="bg-[#e7e6e6] border-r-2 border-black border-b border-black px-2 flex items-center font-bold text-xs uppercase">
+                EQUIPE DE PRONTO EMPREGO - EPE/CDC {epeId}
+              </div>
 
-               {/* Dynamic Date Cells for EPE */}
-               {DATES.map(date => (
-                 <div key={`epe-${epeId}-${date.id}`} className="border-r border-black border-b border-black">
-                    <div className="flex border-b border-gray-300 h-6">
-                        <div className="w-8 bg-gray-100 border-r border-gray-300 flex items-center justify-center text-[9px]">CMT</div>
-                        <ExcelInput id={`EPE_${epeId}_${date.id}_CMT`} bold />
-                    </div>
-                    <div className="flex h-6">
-                        <div className="w-8 bg-gray-100 border-r border-gray-300 flex items-center justify-center text-[9px]">MOT</div>
-                        <ExcelInput id={`EPE_${epeId}_${date.id}_MOT`} />
-                    </div>
-                 </div>
-               ))}
+              {/* Dynamic Date Cells for EPE */}
+              {DATES.map(date => (
+                <div key={`epe-${epeId}-${date.id}`} className="border-r border-black border-b border-black">
+                  <div className="flex border-b border-gray-300 h-6">
+                    <div className="w-8 bg-gray-100 border-r border-gray-300 flex items-center justify-center text-[9px]">CMT</div>
+                    <ExcelInput id={`EPE_${epeId}_${date.id}_CMT`} bold />
+                  </div>
+                  <div className="flex h-6">
+                    <div className="w-8 bg-gray-100 border-r border-gray-300 flex items-center justify-center text-[9px]">MOT</div>
+                    <ExcelInput id={`EPE_${epeId}_${date.id}_MOT`} />
+                  </div>
+                </div>
+              ))}
             </React.Fragment>
           ))}
 
           {/* =================================================================================
               4. REC – RECOBRIMENTO
              ================================================================================= */}
-          
+
           {[1, 2, 3].map((recId) => (
             <React.Fragment key={`rec-row-${recId}`}>
-               <div className="bg-[#d9e1f2] border-r border-black border-b border-black flex items-center justify-center font-black text-sm">{recId + 7}</div>
-               <div className="bg-white border-r border-black border-b border-black flex items-center justify-center text-xs">-</div>
-               <div className="bg-white border-r border-black border-b border-black"></div>
-               <div className="bg-[#e7e6e6] border-r-2 border-black border-b border-black px-2 flex items-center font-bold text-xs uppercase">
-                  EPE/CDC (REC) - RECOBRIMENTO {recId}
-               </div>
+              <div className="bg-[#d9e1f2] border-r border-black border-b border-black flex items-center justify-center font-black text-sm">{recId + 7}</div>
+              <div className="bg-white border-r border-black border-b border-black flex items-center justify-center text-xs">-</div>
+              <div className="bg-white border-r border-black border-b border-black"></div>
+              <div className="bg-[#e7e6e6] border-r-2 border-black border-b border-black px-2 flex items-center font-bold text-xs uppercase">
+                EPE/CDC (REC) - RECOBRIMENTO {recId}
+              </div>
 
-               {DATES.map(date => (
-                 <div key={`rec-${recId}-${date.id}`} className="border-r border-black border-b border-black">
-                    <div className="flex border-b border-gray-300 h-6">
-                        <div className="w-8 bg-gray-100 border-r border-gray-300 flex items-center justify-center text-[9px]">CMT</div>
-                        <ExcelInput id={`REC_${recId}_${date.id}_CMT`} bold />
-                    </div>
-                    <div className="flex h-6">
-                        <div className="w-8 bg-gray-100 border-r border-gray-300 flex items-center justify-center text-[9px]">MOT</div>
-                        <ExcelInput id={`REC_${recId}_${date.id}_MOT`} />
-                    </div>
-                 </div>
-               ))}
+              {DATES.map(date => (
+                <div key={`rec-${recId}-${date.id}`} className="border-r border-black border-b border-black">
+                  <div className="flex border-b border-gray-300 h-6">
+                    <div className="w-8 bg-gray-100 border-r border-gray-300 flex items-center justify-center text-[9px]">CMT</div>
+                    <ExcelInput id={`REC_${recId}_${date.id}_CMT`} bold />
+                  </div>
+                  <div className="flex h-6">
+                    <div className="w-8 bg-gray-100 border-r border-gray-300 flex items-center justify-center text-[9px]">MOT</div>
+                    <ExcelInput id={`REC_${recId}_${date.id}_MOT`} />
+                  </div>
+                </div>
+              ))}
             </React.Fragment>
           ))}
 
@@ -210,161 +210,161 @@ const EscalaDigital = () => {
               11. ESCALA ADJUNTOS 24x72 (Barra Separadora)
              ================================================================================= */}
           <div className="col-span-4 bg-[#4472c4] text-white border-r-2 border-black border-b border-black text-center font-bold text-sm py-1 uppercase">
-             ESCALA DE ADJUNTO: 24X72
+            ESCALA DE ADJUNTO: 24X72
           </div>
           {DATES.map(date => (
-             <div key={`adj-header-${date.id}`} className="bg-[#4472c4] text-white border-r border-black border-b border-black text-center font-bold text-xs py-1 uppercase">
-                ADJUNTO
-             </div>
+            <div key={`adj-header-${date.id}`} className="bg-[#4472c4] text-white border-r border-black border-b border-black text-center font-bold text-xs py-1 uppercase">
+              ADJUNTO
+            </div>
           ))}
 
           <div className="col-span-4 bg-[#d9d9d9] border-r-2 border-black border-b-2 border-black text-center font-bold text-xs py-2 uppercase">
-             HORÁRIO: 07:00H ÀS 07:00
+            HORÁRIO: 07:00H ÀS 07:00
           </div>
           {DATES.map(date => (
-             <div key={`adj-cell-${date.id}`} className="bg-white border-r border-black border-b-2 border-black flex h-10">
-                <div className="w-8 bg-gray-200 border-r border-gray-300 flex items-center justify-center text-[9px] font-bold">ADJ</div>
-                <div className="flex-1">
-                   <ExcelInput id={`ADJUNTO_${date.id}`} center bold />
-                </div>
-             </div>
+            <div key={`adj-cell-${date.id}`} className="bg-white border-r border-black border-b-2 border-black flex h-10">
+              <div className="w-8 bg-gray-200 border-r border-gray-300 flex items-center justify-center text-[9px] font-bold">ADJ</div>
+              <div className="flex-1">
+                <ExcelInput id={`ADJUNTO_${date.id}`} center bold />
+              </div>
+            </div>
           ))}
 
-        </div> 
+        </div>
         {/* FIM DO GRID PRINCIPAL */}
 
         {/* =================================================================================
             5, 6, 7, 8, 9, 10, 12 - BLOCOS INFERIORES (GRID SEPARADO)
            ================================================================================= */}
-        
+
         <div className="grid grid-cols-5 gap-4 mt-6 px-1">
-            
-            {/* BLOCO 5: EXPEDIENTE */}
-            <div className="border-2 border-black">
-               <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-b border-black">EXPEDIENTE</div>
-               
-               <div className="grid grid-cols-[80px_1fr] border-b border-black">
-                  <div className="bg-[#4472c4] text-white text-center text-[10px] font-bold py-1 border-r border-black">HORÁRIO</div>
-                  <div className="bg-[#d9d9d9] text-center text-[10px] font-bold py-1">08H ÀS 18H</div>
-               </div>
 
-               {/* Linhas Expediente */}
-               {[
-                 { role: 'COMANDO', ph: 'MAJ KAMINICHE' },
-                 { role: 'SUBCMT', ph: 'CAP ERNANE' },
-                 { role: 'P1', ph: 'CB EUGÊNIA' },
-                 { role: 'P2', ph: '1º TEN SANTOS' },
-                 { role: 'P3', ph: 'CB LIMA' },
-                 { role: 'P4', ph: 'ST MARÇAL' },
-                 { role: 'MOT CMD', ph: 'CB VARGAS' },
-                 { role: 'TCO', ph: 'SD VENÂNCIO' },
-               ].map((item, i) => (
-                 <div key={i} className="border-b border-black last:border-0 h-7">
-                    <ExcelInput id={`EXP_${item.role}`} placeholder={`${item.ph} [${item.role}]`} className="text-[10px] px-2" bold />
-                 </div>
-               ))}
+          {/* BLOCO 5: EXPEDIENTE */}
+          <div className="border-2 border-black">
+            <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-b border-black">EXPEDIENTE</div>
 
-               {/* Bloco 6: Escala 12x36 (Dentro da coluna esquerda) */}
-               <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-t-2 border-b border-black mt-0">ESCALA 12X36</div>
-               <div className="grid grid-cols-[80px_1fr] border-b border-black">
-                  <div className="bg-[#4472c4] text-white text-center text-[10px] font-bold py-1 border-r border-black">HORÁRIO</div>
-                  <div className="bg-[#d9d9d9] text-center text-[10px] font-bold py-1">07H ÀS 19H</div>
-               </div>
-               {[
-                 { role: 'CMD 44', ph: '1º TEN KLEBER' },
-                 { role: 'MOT CMD 44', ph: '3º SGT WALACE' },
-                 { role: 'AUX P2', ph: '1º SGT JHONATAN' },
-                 { role: 'MANUTENÇÃO', ph: '2º SGT LEUCIONE' },
-               ].map((item, i) => (
-                 <div key={i} className="border-b border-black last:border-0 h-7">
-                    <ExcelInput id={`12X36_${item.role}`} placeholder={`${item.ph} [${item.role}]`} className="text-[10px] px-2" bold />
-                 </div>
-               ))}
+            <div className="grid grid-cols-[80px_1fr] border-b border-black">
+              <div className="bg-[#4472c4] text-white text-center text-[10px] font-bold py-1 border-r border-black">HORÁRIO</div>
+              <div className="bg-[#d9d9d9] text-center text-[10px] font-bold py-1">08H ÀS 18H</div>
             </div>
 
-            {/* BLOCO 10: DISPENSA RECOMPENSA */}
-            <div className="border-2 border-black">
-               <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-b border-black">DISPENSA RECOMPENSA</div>
-               <div className="grid grid-cols-[80px_1fr] border-b border-black bg-[#4472c4] text-white text-[10px] font-bold">
-                  <div className="text-center py-1 border-r border-white">DATA</div>
-                  <div className="text-center py-1">NOME DO POLICIAL</div>
-               </div>
-               {/* 16 Linhas para preencher com renderização garantida (Ajustado para uniformidade) */}
-               {Array.from({ length: 16 }).map((_, i) => (
-                  <div key={`dispensa-${i}`} className="grid grid-cols-[80px_1fr] border-b border-black h-6 last:border-0 bg-white">
-                     <div className="border-r border-black h-full">
-                        <ExcelInput id={`DISP_DATA_${i}`} center />
-                     </div>
-                     <div className="h-full">
-                        <ExcelInput id={`DISP_NOME_${i}`} className="px-2" />
-                     </div>
-                  </div>
-               ))}
-            </div>
+            {/* Linhas Expediente */}
+            {[
+              { role: 'COMANDO', ph: 'MAJ KAMINICHE' },
+              { role: 'SUBCMT', ph: 'CAP ERNANE' },
+              { role: 'P1', ph: 'CB EUGÊNIA' },
+              { role: 'P2', ph: '1º TEN SANTOS' },
+              { role: 'P3', ph: 'CB LIMA' },
+              { role: 'P4', ph: 'ST MARÇAL' },
+              { role: 'MOT CMD', ph: 'CB VARGAS' },
+              { role: 'TCO', ph: 'SD VENÂNCIO' },
+            ].map((item, i) => (
+              <div key={i} className="border-b border-black last:border-0 h-7">
+                <ExcelInput id={`EXP_${item.role}`} placeholder={`${item.ph} [${item.role}]`} className="text-[10px] px-2" bold />
+              </div>
+            ))}
 
-            {/* BLOCO 7, 8, 9: AFASTAMENTOS */}
-            <div className="col-span-2 border-2 border-black">
-                <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-b border-black">AFASTAMENTOS</div>
-                <div className="grid grid-cols-[80px_80px_1fr_100px] border-b border-black bg-[#4472c4] text-white text-[10px] font-bold text-center">
-                   <div className="py-1 border-r border-white">INÍCIO</div>
-                   <div className="py-1 border-r border-white">FINAL</div>
-                   <div className="py-1 border-r border-white">NOME DO POLICIAL</div>
-                   <div className="py-1">TIPO</div>
+            {/* Bloco 6: Escala 12x36 (Dentro da coluna esquerda) */}
+            <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-t-2 border-b border-black mt-0">ESCALA 12X36</div>
+            <div className="grid grid-cols-[80px_1fr] border-b border-black">
+              <div className="bg-[#4472c4] text-white text-center text-[10px] font-bold py-1 border-r border-black">HORÁRIO</div>
+              <div className="bg-[#d9d9d9] text-center text-[10px] font-bold py-1">07H ÀS 19H</div>
+            </div>
+            {[
+              { role: 'CMD 44', ph: '1º TEN KLEBER' },
+              { role: 'MOT CMD 44', ph: '3º SGT WALACE' },
+              { role: 'AUX P2', ph: '1º SGT JHONATAN' },
+              { role: 'MANUTENÇÃO', ph: '2º SGT LEUCIONE' },
+            ].map((item, i) => (
+              <div key={i} className="border-b border-black last:border-0 h-7">
+                <ExcelInput id={`12X36_${item.role}`} placeholder={`${item.ph} [${item.role}]`} className="text-[10px] px-2" bold />
+              </div>
+            ))}
+          </div>
+
+          {/* BLOCO 10: DISPENSA RECOMPENSA */}
+          <div className="border-2 border-black">
+            <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-b border-black">DISPENSA RECOMPENSA</div>
+            <div className="grid grid-cols-[80px_1fr] border-b border-black bg-[#4472c4] text-white text-[10px] font-bold">
+              <div className="text-center py-1 border-r border-white">DATA</div>
+              <div className="text-center py-1">NOME DO POLICIAL</div>
+            </div>
+            {/* 16 Linhas para preencher com renderização garantida (Ajustado para uniformidade) */}
+            {Array.from({ length: 16 }).map((_, i) => (
+              <div key={`dispensa-${i}`} className="grid grid-cols-[80px_1fr] border-b border-black h-6 last:border-0 bg-white">
+                <div className="border-r border-black h-full">
+                  <ExcelInput id={`DISP_DATA_${i}`} center />
                 </div>
-                {/* 16 Linhas para Afastamentos com renderização garantida (Ajustado para uniformidade) */}
-                {Array.from({ length: 16 }).map((_, i) => (
-                  <div key={`afastamento-${i}`} className="grid grid-cols-[80px_80px_1fr_100px] border-b border-black h-6 last:border-0 bg-white">
-                     <div className="border-r border-black h-full"><ExcelInput id={`AFAST_INI_${i}`} center /></div>
-                     <div className="border-r border-black h-full"><ExcelInput id={`AFAST_FIM_${i}`} center /></div>
-                     <div className="border-r border-black h-full"><ExcelInput id={`AFAST_NOME_${i}`} className="px-2" /></div>
-                     <div className="h-full"><ExcelInput id={`AFAST_TIPO_${i}`} className="px-2" placeholder={i === 0 ? "FÉRIAS" : i === 1 ? "LICENÇA ESPECIAL" : i === 2 ? "BAIXA MÉDICA" : ""} /></div>
-                  </div>
-               ))}
+                <div className="h-full">
+                  <ExcelInput id={`DISP_NOME_${i}`} className="px-2" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* BLOCO 7, 8, 9: AFASTAMENTOS */}
+          <div className="col-span-2 border-2 border-black">
+            <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-b border-black">AFASTAMENTOS</div>
+            <div className="grid grid-cols-[80px_80px_1fr_100px] border-b border-black bg-[#4472c4] text-white text-[10px] font-bold text-center">
+              <div className="py-1 border-r border-white">INÍCIO</div>
+              <div className="py-1 border-r border-white">FINAL</div>
+              <div className="py-1 border-r border-white">NOME DO POLICIAL</div>
+              <div className="py-1">TIPO</div>
+            </div>
+            {/* 16 Linhas para Afastamentos com renderização garantida (Ajustado para uniformidade) */}
+            {Array.from({ length: 16 }).map((_, i) => (
+              <div key={`afastamento-${i}`} className="grid grid-cols-[80px_80px_1fr_100px] border-b border-black h-6 last:border-0 bg-white">
+                <div className="border-r border-black h-full"><ExcelInput id={`AFAST_INI_${i}`} center /></div>
+                <div className="border-r border-black h-full"><ExcelInput id={`AFAST_FIM_${i}`} center /></div>
+                <div className="border-r border-black h-full"><ExcelInput id={`AFAST_NOME_${i}`} className="px-2" /></div>
+                <div className="h-full"><ExcelInput id={`AFAST_TIPO_${i}`} className="px-2" placeholder={i === 0 ? "FÉRIAS" : i === 1 ? "LICENÇA ESPECIAL" : i === 2 ? "BAIXA MÉDICA" : ""} /></div>
+              </div>
+            ))}
+          </div>
+
+          {/* BLOCO 12: P2 (NOVO) */}
+          <div className="border-2 border-black">
+            <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-b border-black">P2</div>
+
+            <div className="grid grid-cols-[100px_1fr] border-b border-black">
+              <div className="bg-[#4472c4] text-white text-center text-[10px] font-bold py-1 border-r border-black">HORÁRIO</div>
+              <div className="bg-[#d9d9d9] text-center text-[10px] font-bold py-1">05:00 ÀS 00:00</div>
             </div>
 
-            {/* BLOCO 12: P2 (NOVO) */}
-            <div className="border-2 border-black">
-               <div className="bg-[#4472c4] text-white text-center font-bold text-xs py-1 uppercase border-b border-black">P2</div>
-               
-               <div className="grid grid-cols-[100px_1fr] border-b border-black">
-                  <div className="bg-[#4472c4] text-white text-center text-[10px] font-bold py-1 border-r border-black">HORÁRIO</div>
-                  <div className="bg-[#d9d9d9] text-center text-[10px] font-bold py-1">05:00 ÀS 00:00</div>
-               </div>
-
-               {/* Linhas P2 com grid consistente */}
-               <div className="grid grid-cols-[100px_1fr] border-b border-black h-6 bg-white">
-                  <div className="border-r border-black flex items-center px-1 text-[10px] font-bold">ANÁLISE</div>
-                  <div className="h-full"><ExcelInput id="P2_ANALISE" className="px-1" /></div>
-               </div>
-
-               {[
-                 { label: 'PELOTÃO: ALPHA', id: 'ALPHA_1', ph: '2ºSGT EDER' },
-                 { label: 'PELOTÃO: ALPHA', id: 'ALPHA_2', ph: '3ºSGT SANDER' },
-                 { label: 'PELOTÃO: BRAVO', id: 'BRAVO_1', ph: 'CB PASSOS' },
-                 { label: 'PELOTÃO: BRAVO', id: 'BRAVO_2', ph: 'CB WARTELOO' },
-                 { label: 'PELOTÃO: CHARLIE', id: 'CHARLIE_1', ph: 'CB SENA' },
-                 { label: 'PELOTÃO: CHARLIE', id: 'CHARLIE_2', ph: 'CB MENDES' },
-                 { label: 'PELOTÃO: DELTA', id: 'DELTA_1', ph: '3ºSGT NETTO' },
-                 { label: 'PELOTÃO: DELTA', id: 'DELTA_2', ph: 'PM DE FÉRIAS' },
-               ].map((item, i) => (
-                 <div key={i} className="grid grid-cols-[100px_1fr] border-b border-black h-6 bg-white">
-                    <div className="border-r border-black flex items-center px-1 text-[9px] font-bold uppercase">{item.label}</div>
-                    <div className="h-full">
-                        <ExcelInput id={`P2_${item.id}`} placeholder={item.ph} className="text-[10px] px-1" />
-                    </div>
-                 </div>
-               ))}
-               
-               {/* Linhas Vazias de Preenchimento para P2 (Ajustado para totalizar 16 linhas: 9 fixas + 7 vazias) */}
-               {Array.from({ length: 7 }).map((_, i) => (
-                  <div key={`p2-empty-${i}`} className="grid grid-cols-[100px_1fr] border-b border-black h-6 last:border-0 bg-white">
-                     <div className="border-r border-black h-full"></div>
-                     <div className="h-full">
-                        <ExcelInput id={`P2_EMPTY_${i}`} className="px-1" />
-                     </div>
-                  </div>
-               ))}
+            {/* Linhas P2 com grid consistente */}
+            <div className="grid grid-cols-[100px_1fr] border-b border-black h-6 bg-white">
+              <div className="border-r border-black flex items-center px-1 text-[10px] font-bold">ANÁLISE</div>
+              <div className="h-full"><ExcelInput id="P2_ANALISE" className="px-1" /></div>
             </div>
+
+            {[
+              { label: 'PELOTÃO: ALPHA', id: 'ALPHA_1', ph: '2ºSGT EDER' },
+              { label: 'PELOTÃO: ALPHA', id: 'ALPHA_2', ph: '3ºSGT SANDER' },
+              { label: 'PELOTÃO: BRAVO', id: 'BRAVO_1', ph: 'CB PASSOS' },
+              { label: 'PELOTÃO: BRAVO', id: 'BRAVO_2', ph: 'CB WARTELOO' },
+              { label: 'PELOTÃO: CHARLIE', id: 'CHARLIE_1', ph: 'CB SENA' },
+              { label: 'PELOTÃO: CHARLIE', id: 'CHARLIE_2', ph: 'CB MENDES' },
+              { label: 'PELOTÃO: DELTA', id: 'DELTA_1', ph: '3ºSGT NETTO' },
+              { label: 'PELOTÃO: DELTA', id: 'DELTA_2', ph: 'PM DE FÉRIAS' },
+            ].map((item, i) => (
+              <div key={i} className="grid grid-cols-[100px_1fr] border-b border-black h-6 bg-white">
+                <div className="border-r border-black flex items-center px-1 text-[9px] font-bold uppercase">{item.label}</div>
+                <div className="h-full">
+                  <ExcelInput id={`P2_${item.id}`} placeholder={item.ph} className="text-[10px] px-1" />
+                </div>
+              </div>
+            ))}
+
+            {/* Linhas Vazias de Preenchimento para P2 (Ajustado para totalizar 16 linhas: 9 fixas + 7 vazias) */}
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={`p2-empty-${i}`} className="grid grid-cols-[100px_1fr] border-b border-black h-6 last:border-0 bg-white">
+                <div className="border-r border-black h-full"></div>
+                <div className="h-full">
+                  <ExcelInput id={`P2_EMPTY_${i}`} className="px-1" />
+                </div>
+              </div>
+            ))}
+          </div>
 
         </div>
 
@@ -557,8 +557,29 @@ function RegistrarTab() {
 
   // Operacional
   const [pelotao, setPelotao] = useState<string>('ALPHA');
-  const [search, setSearch] = useState<string>('');
-  const [poolFilter, setPoolFilter] = useState<'TODOS' | 'DISPONIVEIS' | 'INATIVOS'>('TODOS');
+  const [search, setSearch] = useState('');
+  const [poolFilter, setPoolFilter] = useState<'TODOS' | 'DISPONIVEIS' | 'INATIVOS' | 'JA_ESCALADOS'>('DISPONIVEIS');
+
+  const [obsCountMap, setObsCountMap] = useState<Record<string, number>>(() => {
+    const saved = localStorage.getItem('bpmterminal:escala:obsCount');
+    if (saved) return JSON.parse(saved);
+    return {};
+  });
+
+  useEffect(() => {
+    localStorage.setItem('bpmterminal:escala:obsCount', JSON.stringify(obsCountMap));
+  }, [obsCountMap]);
+
+  // Controle de visibilidade de Auxiliares (dinâmico)
+  const [auxShowMap, setAuxShowMap] = useState<Record<string, boolean>>(() => {
+    const saved = localStorage.getItem('bpmterminal:escala:auxShow');
+    if (saved) return JSON.parse(saved);
+    return {};
+  });
+
+  useEffect(() => {
+    localStorage.setItem('bpmterminal:escala:auxShow', JSON.stringify(auxShowMap));
+  }, [auxShowMap]);
   const [listMode, setListMode] = useState<'INDIVIDUAL' | 'EQUIPE'>('INDIVIDUAL');
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
 
@@ -580,6 +601,21 @@ function RegistrarTab() {
   }, [rows]);
 
   // ---------- helpers ----------
+  function renderStatusBadge(inactive: boolean, already?: boolean) {
+    if (already) {
+      return (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-700 text-white">
+          JÁ ESCALADO
+        </span>
+      );
+    }
+    return (
+      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${inactive ? 'bg-red-800' : 'bg-green-800'} text-white shadow-sm`}>
+        {inactive ? 'INATIVO' : 'ATIVO'}
+      </span>
+    );
+  }
+
   const findAfast = useMemo(() => {
     return (matricula: string | number, dateIso: string) => {
       const dt = toDate(dateIso).getTime();
@@ -612,23 +648,33 @@ function RegistrarTab() {
   }
 
   function slotTone(situacao?: SituacaoCadastro) {
-    // 🟩 Escalado / 🟨 Dispensa / 🟥 Afastamento
     if (!situacao || situacao === 'PM ESCALADO') {
       return {
-        wrap: 'border-green-700 ring-1 ring-green-100 bg-green-50/30',
-        badge: 'bg-green-600 text-white',
+        wrap: 'border-2 border-green-600 bg-green-700 shadow-lg',
+        badge: 'bg-green-800 text-white',
+        title: 'text-white',
+        label: 'text-green-100',
+        icon: 'text-green-300',
+        divider: 'border-green-600'
       };
     }
     if (situacao === 'PM DISPENSADO') {
       return {
-        wrap: 'border-amber-400 ring-1 ring-amber-100 bg-amber-50/40',
-        badge: 'bg-amber-500 text-white',
+        wrap: 'border-2 border-amber-600 bg-amber-600 shadow-lg',
+        badge: 'bg-amber-800 text-white',
+        title: 'text-white',
+        label: 'text-amber-100',
+        icon: 'text-amber-200',
+        divider: 'border-amber-500'
       };
     }
-    // Férias / Atestado / Licença Especial = afastamento
     return {
-      wrap: 'border-red-400 ring-1 ring-red-100 bg-red-50/40',
-      badge: 'bg-red-600 text-white',
+      wrap: 'border-2 border-red-700 bg-red-700 shadow-lg',
+      badge: 'bg-red-900 text-white',
+      title: 'text-white',
+      label: 'text-red-100',
+      icon: 'text-red-200',
+      divider: 'border-red-600'
     };
   }
 
@@ -651,7 +697,7 @@ function RegistrarTab() {
 
   type SlotDef = { slotId: string; title: string; secao: SecaoCadastro; pelotao?: string; area?: string; funcao?: string };
 
-  const slots: SlotDef[] = useMemo(() => {
+  const baseSlots: SlotDef[] = useMemo(() => {
     if (section === 'OPERACIONAL') {
       const defs: SlotDef[] = [];
       OP_AREAS.forEach((area) => {
@@ -737,124 +783,203 @@ function RegistrarTab() {
     return defs;
   }, [section, pelotao]);
 
+  const slots: SlotDef[] = useMemo(() => {
+    const finalDefs = [...baseSlots];
+    const scKey = `${section}:${dataISO}:${pelotao || ''}`;
+    const nObs = obsCountMap[scKey] || 3;
+    const mappedSecao: SecaoCadastro =
+      section === 'OPERACIONAL' ? 'ESCALA OPERACIONAL' :
+        section === 'EXPEDIENTE' ? 'ESCALA EXPEDIENTE' :
+          section === 'DOZE_36' ? 'ESCALA 12X36' :
+            section === 'P2' ? 'ESCALA P2' : 'ESCALA ADJUNTOS 24X72';
+
+    for (let i = 1; i <= nObs; i++) {
+      finalDefs.push({
+        slotId: `OBS:${section}:${pelotao || ''}:${dataISO}:${i}`,
+        title: `OBSERVAÇÃO ${i}`,
+        secao: mappedSecao,
+        pelotao,
+        area: 'OBSERVAÇÕES',
+        funcao: 'OBS',
+      });
+    }
+    return finalDefs;
+  }, [baseSlots, section, pelotao, dataISO, obsCountMap]);
+
   const [opTeams, setOpTeams] = useState<Record<string, Array<{ key: string; label: string; area: string; members: Array<{ funcao: string; policial?: string; situacao?: SituacaoCadastro }> }>>>(() => {
     const saved = localStorage.getItem('bpmterminal:escala:opTeams');
     if (saved) return JSON.parse(saved);
     return {
       ALPHA: [
-        { key: 'CPU', label: 'CPU (Supervisão)', area: 'CPU', members: [
-          { funcao: 'CMT', policial: '1º TEN SANTIAGO 38.718' },
-          { funcao: 'MOT', policial: 'CB REZENDE 37.958' },
-        ]},
-        { key: 'E1', label: 'Equipe 1', area: 'ÁREA I', members: [
-          { funcao: 'CMT', policial: '1º SGT RAMOS 24.955' },
-          { funcao: 'MOT', policial: 'SD SARMENTO 39.435' },
-        ]},
-        { key: 'E2', label: 'Equipe 2', area: 'ÁREA II', members: [
-          { funcao: 'CMT', policial: '3º SGT JUNIO 35.820' },
-          { funcao: 'MOT', policial: 'CB SAITON 38.291' },
-          { funcao: 'AUX', policial: 'SD C. RIBEIRO 38.974' },
-        ]},
-        { key: 'E3', label: 'Equipe 3', area: 'ÁREA III', members: [
-          { funcao: 'OBS', situacao: 'PM DISPENSADO' },
-        ]},
-        { key: 'EPE1', label: 'EPE/CDC 1', area: 'EPE/CDC 1', members: [
-          { funcao: 'CMT', policial: 'CB MORAIS 38.657' },
-          { funcao: 'MOT', policial: 'SD LUCAS MIGUEL 39.874' },
-        ]},
-        { key: 'EPE2', label: 'EPE/CDC 2', area: 'EPE/CDC 2', members: [
-          { funcao: 'CMT', policial: 'CB EULLER 37.104' },
-          { funcao: 'MOT', policial: 'SD GERALDO 39.096' },
-        ]},
-        { key: 'EPE3', label: 'EPE/CDC 3', area: 'EPE/CDC 3', members: [
-          { funcao: 'CMT', policial: '2º SGT MESSIAS 34.962' },
-          { funcao: 'MOT', policial: 'SD CARNEIRO 39.357' },
-        ]},
+        {
+          key: 'CPU', label: 'CPU (Supervisão)', area: 'CPU', members: [
+            { funcao: 'CMT', policial: '1º TEN SANTIAGO 38.718' },
+            { funcao: 'MOT', policial: 'CB REZENDE 37.958' },
+          ]
+        },
+        {
+          key: 'E1', label: 'Equipe 1', area: 'ÁREA I', members: [
+            { funcao: 'CMT', policial: '1º SGT RAMOS 24.955' },
+            { funcao: 'MOT', policial: 'SD SARMENTO 39.435' },
+          ]
+        },
+        {
+          key: 'E2', label: 'Equipe 2', area: 'ÁREA II', members: [
+            { funcao: 'CMT', policial: '3º SGT JUNIO 35.820' },
+            { funcao: 'MOT', policial: 'CB SAITON 38.291' },
+            { funcao: 'AUX', policial: 'SD C. RIBEIRO 38.974' },
+          ]
+        },
+        {
+          key: 'E3', label: 'Equipe 3', area: 'ÁREA III', members: [
+            { funcao: 'OBS', situacao: 'PM DISPENSADO' },
+          ]
+        },
+        {
+          key: 'EPE1', label: 'EPE/CDC 1', area: 'EPE/CDC 1', members: [
+            { funcao: 'CMT', policial: 'CB MORAIS 38.657' },
+            { funcao: 'MOT', policial: 'SD LUCAS MIGUEL 39.874' },
+          ]
+        },
+        {
+          key: 'EPE2', label: 'EPE/CDC 2', area: 'EPE/CDC 2', members: [
+            { funcao: 'CMT', policial: 'CB EULLER 37.104' },
+            { funcao: 'MOT', policial: 'SD GERALDO 39.096' },
+          ]
+        },
+        {
+          key: 'EPE3', label: 'EPE/CDC 3', area: 'EPE/CDC 3', members: [
+            { funcao: 'CMT', policial: '2º SGT MESSIAS 34.962' },
+            { funcao: 'MOT', policial: 'SD CARNEIRO 39.357' },
+          ]
+        },
       ],
       BRAVO: [
-        { key: 'CPU', label: 'CPU (Supervisão)', area: 'CPU', members: [
-          { funcao: 'CMT', policial: '1º SGT SUDÁRIO 32.288' },
-          { funcao: 'MOT', policial: 'SD NETO 39.948' },
-        ]},
-        { key: 'E1', label: 'Equipe 1', area: 'ÁREA I', members: [
-          { funcao: 'CMT', policial: '2º SGT DE PAULA 27.183' },
-          { funcao: 'MOT', policial: 'CB DE LIMA 37.379' },
-        ]},
-        { key: 'E2', label: 'Equipe 2', area: 'ÁREA II', members: [
-          { funcao: 'CMT', policial: '2º SGT VICTOY 33.142' },
-          { funcao: 'MOT', policial: 'CB GILVAN 37.253' },
-        ]},
-        { key: 'E3', label: 'Equipe 3', area: 'ÁREA III', members: [
-          { funcao: 'AUX', policial: '3º SGT CÉSAR 35.928' },
-        ]},
-        { key: 'EPE1', label: 'EPE/CDC 1', area: 'EPE/CDC 1', members: [
-          { funcao: 'CMT', policial: '2º SGT CÂNDIDO FILHO 33.000' },
-          { funcao: 'MOT', policial: 'SD VASCONCELLOS 38.984' },
-        ]},
-        { key: 'EPE2', label: 'EPE/CDC 2', area: 'EPE/CDC 2', members: [
-          { funcao: 'CMT', policial: '3º SGT MARK 35.893' },
-          { funcao: 'MOT', policial: 'CB GOMES 38.426' },
-        ]},
-        { key: 'EPE3', label: 'EPE/CDC 3', area: 'EPE/CDC 3', members: [
-          { funcao: 'CMT', policial: '3º SGT DARLAN 35.619' },
-          { funcao: 'MOT', policial: 'SD BRENDON 38.937' },
-        ]},
+        {
+          key: 'CPU', label: 'CPU (Supervisão)', area: 'CPU', members: [
+            { funcao: 'CMT', policial: '1º SGT SUDÁRIO 32.288' },
+            { funcao: 'MOT', policial: 'SD NETO 39.948' },
+          ]
+        },
+        {
+          key: 'E1', label: 'Equipe 1', area: 'ÁREA I', members: [
+            { funcao: 'CMT', policial: '2º SGT DE PAULA 27.183' },
+            { funcao: 'MOT', policial: 'CB DE LIMA 37.379' },
+          ]
+        },
+        {
+          key: 'E2', label: 'Equipe 2', area: 'ÁREA II', members: [
+            { funcao: 'CMT', policial: '2º SGT VICTOY 33.142' },
+            { funcao: 'MOT', policial: 'CB GILVAN 37.253' },
+          ]
+        },
+        {
+          key: 'E3', label: 'Equipe 3', area: 'ÁREA III', members: [
+            { funcao: 'AUX', policial: '3º SGT CÉSAR 35.928' },
+          ]
+        },
+        {
+          key: 'EPE1', label: 'EPE/CDC 1', area: 'EPE/CDC 1', members: [
+            { funcao: 'CMT', policial: '2º SGT CÂNDIDO FILHO 33.000' },
+            { funcao: 'MOT', policial: 'SD VASCONCELLOS 38.984' },
+          ]
+        },
+        {
+          key: 'EPE2', label: 'EPE/CDC 2', area: 'EPE/CDC 2', members: [
+            { funcao: 'CMT', policial: '3º SGT MARK 35.893' },
+            { funcao: 'MOT', policial: 'CB GOMES 38.426' },
+          ]
+        },
+        {
+          key: 'EPE3', label: 'EPE/CDC 3', area: 'EPE/CDC 3', members: [
+            { funcao: 'CMT', policial: '3º SGT DARLAN 35.619' },
+            { funcao: 'MOT', policial: 'SD BRENDON 38.937' },
+          ]
+        },
       ],
       CHARLIE: [
-        { key: 'CPU', label: 'CPU (Supervisão)', area: 'CPU', members: [
-          { funcao: 'CMT', policial: '1º TEN SERAFIM 30.220' },
-          { funcao: 'MOT', policial: 'CB HENRIQUE 38.019' },
-        ]},
-        { key: 'E1', label: 'Equipe 1', area: 'ÁREA I', members: [
-          { funcao: 'CMT', policial: '2º SGT ANDRÉ AMARAL 34.226' },
-          { funcao: 'MOT', policial: 'CB CÉLIO 36.383' },
-        ]},
-        { key: 'E2', label: 'Equipe 2', area: 'ÁREA II', members: [
-          { funcao: 'OBS', situacao: 'PM DISPENSADO' },
-        ]},
-        { key: 'E3', label: 'Equipe 3', area: 'ÁREA III', members: [
-          { funcao: 'OBS', situacao: 'PM DISPENSADO' },
-        ]},
-        { key: 'EPE1', label: 'EPE/CDC 1', area: 'EPE/CDC 1', members: [
-          { funcao: 'CMT', policial: 'CB FERREIRA 36.977' },
-          { funcao: 'MOT', policial: 'SD BRITO 39.580' },
-        ]},
-        { key: 'EPE2', label: 'EPE/CDC 2', area: 'EPE/CDC 2', members: [
-          { funcao: 'CMT', policial: '2º SGT FERNANDO 31.279' },
-          { funcao: 'MOT', policial: 'SD OLIVEIRA 40.025' },
-        ]},
-        { key: 'EPE3', label: 'EPE/CDC 3', area: 'EPE/CDC 3', members: [
-          { funcao: 'CMT', policial: '3º SGT ÉZIO 35.672' },
-          { funcao: 'MOT', policial: 'CB JOAQUINO 36.720' },
-        ]},
+        {
+          key: 'CPU', label: 'CPU (Supervisão)', area: 'CPU', members: [
+            { funcao: 'CMT', policial: '1º TEN SERAFIM 30.220' },
+            { funcao: 'MOT', policial: 'CB HENRIQUE 38.019' },
+          ]
+        },
+        {
+          key: 'E1', label: 'Equipe 1', area: 'ÁREA I', members: [
+            { funcao: 'CMT', policial: '2º SGT ANDRÉ AMARAL 34.226' },
+            { funcao: 'MOT', policial: 'CB CÉLIO 36.383' },
+          ]
+        },
+        {
+          key: 'E2', label: 'Equipe 2', area: 'ÁREA II', members: [
+            { funcao: 'OBS', situacao: 'PM DISPENSADO' },
+          ]
+        },
+        {
+          key: 'E3', label: 'Equipe 3', area: 'ÁREA III', members: [
+            { funcao: 'OBS', situacao: 'PM DISPENSADO' },
+          ]
+        },
+        {
+          key: 'EPE1', label: 'EPE/CDC 1', area: 'EPE/CDC 1', members: [
+            { funcao: 'CMT', policial: 'CB FERREIRA 36.977' },
+            { funcao: 'MOT', policial: 'SD BRITO 39.580' },
+          ]
+        },
+        {
+          key: 'EPE2', label: 'EPE/CDC 2', area: 'EPE/CDC 2', members: [
+            { funcao: 'CMT', policial: '2º SGT FERNANDO 31.279' },
+            { funcao: 'MOT', policial: 'SD OLIVEIRA 40.025' },
+          ]
+        },
+        {
+          key: 'EPE3', label: 'EPE/CDC 3', area: 'EPE/CDC 3', members: [
+            { funcao: 'CMT', policial: '3º SGT ÉZIO 35.672' },
+            { funcao: 'MOT', policial: 'CB JOAQUINO 36.720' },
+          ]
+        },
       ],
       DELTA: [
-        { key: 'CPU', label: 'CPU (Supervisão)', area: 'CPU', members: [
-          { funcao: 'CMT', policial: '1º TEN MONTES 31.123' },
-          { funcao: 'MOT', policial: 'SD RENAN 39.989' },
-        ]},
-        { key: 'E1', label: 'Equipe 1', area: 'ÁREA I', members: [
-          { funcao: 'CMT', policial: '2º SGT KLAUBER 26.808' },
-          { funcao: 'MOT', policial: 'SD MARQUES 38.882' },
-        ]},
-        { key: 'E2', label: 'Equipe 2', area: 'ÁREA II', members: [
-          { funcao: 'AUX', policial: '3º SGT JAIRO 35.768' },
-        ]},
-        { key: 'E3', label: 'Equipe 3', area: 'ÁREA III', members: [
-          { funcao: 'OBS', situacao: 'PM DISPENSADO' },
-        ]},
-        { key: 'EPE1', label: 'EPE/CDC 1', area: 'EPE/CDC 1', members: [
-          { funcao: 'CMT', policial: '1º SGT MACEDO 27.733' },
-          { funcao: 'MOT', policial: 'SD SILVA 39.280' },
-        ]},
-        { key: 'EPE2', label: 'EPE/CDC 2', area: 'EPE/CDC 2', members: [
-          { funcao: 'CMT', policial: '2º SGT PAULO VIEIRA 32.956' },
-          { funcao: 'MOT', policial: '3º SGT ABELNCAR 35.686' },
-        ]},
-        { key: 'EPE3', label: 'EPE/CDC 3', area: 'EPE/CDC 3', members: [
-          { funcao: 'CMT', policial: '3º SGT DIAS 34.425' },
-          { funcao: 'MOT', policial: 'SD NIVALDO 39.396' },
-        ]},
+        {
+          key: 'CPU', label: 'CPU (Supervisão)', area: 'CPU', members: [
+            { funcao: 'CMT', policial: '1º TEN MONTES 31.123' },
+            { funcao: 'MOT', policial: 'SD RENAN 39.989' },
+          ]
+        },
+        {
+          key: 'E1', label: 'Equipe 1', area: 'ÁREA I', members: [
+            { funcao: 'CMT', policial: '2º SGT KLAUBER 26.808' },
+            { funcao: 'MOT', policial: 'SD MARQUES 38.882' },
+          ]
+        },
+        {
+          key: 'E2', label: 'Equipe 2', area: 'ÁREA II', members: [
+            { funcao: 'AUX', policial: '3º SGT JAIRO 35.768' },
+          ]
+        },
+        {
+          key: 'E3', label: 'Equipe 3', area: 'ÁREA III', members: [
+            { funcao: 'OBS', situacao: 'PM DISPENSADO' },
+          ]
+        },
+        {
+          key: 'EPE1', label: 'EPE/CDC 1', area: 'EPE/CDC 1', members: [
+            { funcao: 'CMT', policial: '1º SGT MACEDO 27.733' },
+            { funcao: 'MOT', policial: 'SD SILVA 39.280' },
+          ]
+        },
+        {
+          key: 'EPE2', label: 'EPE/CDC 2', area: 'EPE/CDC 2', members: [
+            { funcao: 'CMT', policial: '2º SGT PAULO VIEIRA 32.956' },
+            { funcao: 'MOT', policial: '3º SGT ABELNCAR 35.686' },
+          ]
+        },
+        {
+          key: 'EPE3', label: 'EPE/CDC 3', area: 'EPE/CDC 3', members: [
+            { funcao: 'CMT', policial: '3º SGT DIAS 34.425' },
+            { funcao: 'MOT', policial: 'SD NIVALDO 39.396' },
+          ]
+        },
       ],
     };
   });
@@ -966,37 +1091,31 @@ function RegistrarTab() {
     return pelotao;
   }, [pelotao]);
 
-  
-  const policePool = useMemo(() => {
-    const alreadyEscalatedIds = new Set(
-      rowsForScope.flatMap(r => {
-        const ids: number[] = [];
-        if (r.policialId) ids.push(r.policialId);
-        if (r.auxiliar?.policialId) ids.push(r.auxiliar.policialId);
-        return ids;
-      })
-    );
 
+  const basePolicePool = useMemo(() => {
     // Escopos de lista (Referência)
     function matchPool(p: any) {
       const eq = String(p?.equipe || '').toUpperCase().trim();
+      const mat = String(p?.matricula || '').replace(/\D/g, '');
 
       if (section === 'OPERACIONAL') {
         return eq === pelotaoTeam;
       }
 
       if (section === 'EXPEDIENTE') {
-        // Heurística: equipe cadastrada como EXPEDIENTE/COMANDO/SUBCMT/P1..P4/TCO
+        if (mat === '28702' || mat === '37566') return true;
         if (eq.includes('EXP')) return true;
         return ['EXPEDIENTE', 'COMANDO', 'SUBCMT', 'P1', 'P/1', 'P3', 'P/3', 'P4', 'P/4', 'TCO'].includes(eq);
       }
 
       if (section === 'DOZE_36') {
+        if (['28905', '34208', '31853', '30245'].includes(mat)) return true;
         if (eq.includes('12')) return true;
         return ['12X36', '12X 36', '12X-36'].includes(eq);
       }
 
       if (section === 'P2') {
+        if (mat === '31853' || mat === '28702' || mat === '37566') return false;
         return eq === 'P2' || eq.includes('P2');
       }
 
@@ -1007,14 +1126,14 @@ function RegistrarTab() {
       return false;
     }
 
-    const base = (policiais || [])
+    return (policiais || [])
       .filter((p: any) => matchPool(p))
       .map((p: any) => {
         const a = findAfast(p.matricula, dataISO);
         return { ...p, __inactive: !!a, __afast: a };
       })
       .filter((p: any) => {
-        // Busca
+        // Busca sempre ativa para ambos os pools
         if (!search.trim()) return true;
         const q = search.trim().toLowerCase();
         return (
@@ -1022,26 +1141,62 @@ function RegistrarTab() {
           String(p.matricula || '').toLowerCase().includes(q)
         );
       })
-      .filter((p: any) => {
-        // Filtro rápido
-        if (poolFilter === 'INATIVOS') return !!p.__inactive;
-        if (poolFilter === 'DISPONIVEIS') return !p.__inactive && !alreadyEscalatedIds.has(p.id);
-        return true; // TODOS
-      })
       .sort((a: any, b: any) => {
-        // ativos primeiro; depois por nome
         const ia = Number(a.__inactive);
         const ib = Number(b.__inactive);
         if (ia !== ib) return ia - ib;
-        return String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR');
+
+        const HIERARQUIA = [
+          "CEL", "TEN CEL", "MAJ", "CAP", "1º TEN", "2º TEN", "ASP",
+          "ST", "1º SGT", "2º SGT", "3º SGT", "CB", "SD"
+        ];
+
+        const getRankInfo = (p: any) => {
+          let grad = String(p.graduacao || '').toUpperCase().trim();
+          if (!grad) {
+            const parts = String(p.nome || '').toUpperCase().trim().split(' ');
+            const multiWordRank = parts.slice(0, 2).join(' ');
+            if (HIERARQUIA.includes(multiWordRank)) {
+              grad = multiWordRank;
+            } else if (HIERARQUIA.includes(parts[0])) {
+              grad = parts[0];
+            }
+          }
+          const gradIndex = HIERARQUIA.indexOf(grad);
+          const rgNum = parseInt(String(p.matricula || p.rg || '0').replace(/\D/g, ''), 10);
+          return { rankLevel: gradIndex === -1 ? 99 : gradIndex, rg: rgNum };
+        };
+
+        const infoA = getRankInfo(a);
+        const infoB = getRankInfo(b);
+        if (infoA.rankLevel !== infoB.rankLevel) return infoA.rankLevel - infoB.rankLevel;
+        return infoA.rg - infoB.rg;
+      });
+  }, [policiais, pelotaoTeam, search, dataISO, findAfast, section]);
+
+  const policePool = useMemo(() => {
+    const alreadyEscalatedIds = new Set(
+      rowsForScope.flatMap(r => {
+        const ids: number[] = [];
+        if (r.policialId) ids.push(r.policialId);
+        if (r.auxiliar?.policialId) ids.push(r.auxiliar.policialId);
+        return ids;
+      })
+    );
+
+    const base = basePolicePool
+      .filter((p: any) => {
+        // Filtro rápido para a Lista de Arrastar (Coluna A)
+        if (poolFilter === 'INATIVOS') return !!p.__inactive;
+        if (poolFilter === 'DISPONIVEIS') return !p.__inactive && !alreadyEscalatedIds.has(p.id);
+        return true; // TODOS
       });
 
-    // Regra de ouro: PM já escalado no escopo não aparece como disponível (mas pode aparecer em TODOS)
     if (poolFilter === 'DISPONIVEIS') return base;
     return base.map((p: any) => ({ ...p, __already: alreadyEscalatedIds.has(p.id) }));
-  }, [policiais, pelotaoTeam, search, dataISO, findAfast, rowsForScope, section, poolFilter]);
+  }, [basePolicePool, poolFilter, rowsForScope]);
 
-  
+
   const poolCounts = useMemo(() => {
     const all = policePool.length;
     const inativos = policePool.filter((p: any) => !!p.__inactive).length;
@@ -1049,7 +1204,7 @@ function RegistrarTab() {
     const disponiveis = policePool.filter((p: any) => !p.__inactive && !p.__already).length;
     return { all, disponiveis, jaEscalados, inativos };
   }, [policePool]);
-const slotMap = useMemo(() => {
+  const slotMap = useMemo(() => {
     const map: Record<string, RegistroEscala> = {};
     rowsForScope.forEach((r) => {
       if (r.slotId) map[r.slotId] = r;
@@ -1064,8 +1219,16 @@ const slotMap = useMemo(() => {
 
     const areaWarnings: string[] = [];
     (['ÁREA I', 'ÁREA II', 'ÁREA III', 'ÁREA IV', 'ÁREA V'] as const).forEach((a) => {
+      const cmt = get(a, 'CMT')?.policial;
       const mot = get(a, 'MOT')?.policial;
-      if (!mot) areaWarnings.push(`${a} sem MOT`);
+
+      if (!cmt && !mot) {
+        areaWarnings.push(`${a} sem CMT e MOT`);
+      } else if (!cmt) {
+        areaWarnings.push(`${a} sem CMT`);
+      } else if (!mot) {
+        areaWarnings.push(`${a} sem MOT`);
+      }
     });
 
     // EPE/CDC 3 equipes: CMT e MOT devem estar preenchidos
@@ -1175,68 +1338,180 @@ const slotMap = useMemo(() => {
   }
 
   function autoFill() {
-    if (section === 'OPERACIONAL') {
-      const teamsList = opTeams[pelotao];
-      if (!teamsList) {
-        alert('Nenhuma configuração padrão encontrada para este pelotão.');
+    // 1. Lógica Genérica para Seções Não-Operacionais
+    if (section !== 'OPERACIONAL') {
+      let defaultList: Array<{ slotId: string; policial: string }> = [];
+
+      if (section === 'EXPEDIENTE') defaultList = DEFAULT_EXPEDIENTE;
+      else if (section === 'DOZE_36') defaultList = DEFAULT_12X36;
+      else if (section === 'P2') defaultList = DEFAULT_P2;
+      else if (section === 'ADJUNTOS_24X72') defaultList = DEFAULT_ADJUNTOS_BY_DATE[dataISO] || [];
+
+      if (defaultList.length === 0) {
+        alert('Nenhuma configuração padrão encontrada para esta seção/data.');
         return;
       }
-      const byAreaFunc: Record<string, { policial?: string; situacao?: SituacaoCadastro }> = {};
 
-      teamsList.forEach((t) => {
-        t.members.forEach((m) => {
-          const key = `${t.area}:${m.funcao}`;
-          byAreaFunc[key] = { policial: m.policial, situacao: m.situacao || 'PM ESCALADO' };
-        });
+      const available = policePool.filter(p => !p.__inactive && !p.__already);
+      const usedIds = new Set<number>();
+
+      defaultList.forEach(item => {
+        const slot = slots.find(s => s.slotId === item.slotId);
+        if (!slot) return;
+
+        // Não sobrescrever manual
+        if (slotMap[slot.slotId]?.policial && !slotMap[slot.slotId]?.id.startsWith('temp-')) return;
+
+        // Tenta encontrar o policial da lista no pool
+        const mat = String(item.policial).split(' ').pop()?.replace(/\D/g, '');
+        const p = available.find(ap => String(ap.matricula).replace(/\D/g, '') === mat);
+
+        if (p && !usedIds.has(p.id)) {
+          upsertBySlot(slot, {
+            policial: p.nome,
+            policialId: p.id,
+            situacao: 'PM ESCALADO'
+          });
+          usedIds.add(p.id);
+        }
       });
 
-      slots.forEach((s) => {
-        const k = `${s.area}:${s.funcao}`;
-        const found = byAreaFunc[k];
-        if (!found) return;
-        upsertBySlot(s, {
-          policial: found.policial || '',
-          policialId: undefined,
-          situacao: found.situacao || 'PM ESCALADO',
-        });
-      });
       return;
     }
 
-    if (section === 'EXPEDIENTE') {
-      DEFAULT_EXPEDIENTE.forEach((d) => {
-        const s = slots.find((x) => x.slotId === d.slotId);
-        if (!s) return;
-        upsertBySlot(s, { policial: d.policial, policialId: undefined, situacao: 'PM ESCALADO' });
-      });
+    // 2. Lógica Específica para Escala Operacional (Mantida)
+    const configs = opTeams[pelotao];
+    if (!configs) {
+      alert('Nenhuma configuração padrão encontrada para este pelotão.');
       return;
     }
 
-    if (section === 'DOZE_36') {
-      DEFAULT_12X36.forEach((d) => {
-        const s = slots.find((x) => x.slotId === d.slotId);
-        if (!s) return;
-        upsertBySlot(s, { policial: d.policial, policialId: undefined, situacao: 'PM ESCALADO' });
-      });
-      return;
-    }
+    // ... (restante da lógica operacional mantida conforme estava)
+    const available = policePool.filter(p => !p.__inactive && !p.__already);
+    const usedIds = new Set<number>();
 
-    if (section === 'ADJUNTOS_24X72') {
-      const list = DEFAULT_ADJUNTOS_BY_DATE[dataISO] || [];
-      list.forEach((d) => {
-        const s = slots.find((x) => x.slotId === d.slotId);
-        if (!s) return;
-        upsertBySlot(s, { policial: d.policial, policialId: undefined, situacao: 'PM ESCALADO' });
-      });
-      return;
-    }
+    const finalAllocations: Record<string, { policial: string; policialId?: number; situacao: SituacaoCadastro; auxiliar?: any }> = {};
+    const leftovers: any[] = [];
+    const priorityAreas = ['CPU', 'EPE/CDC 1', 'EPE/CDC 2', 'EPE/CDC 3', 'ÁREA I', 'ÁREA II', 'ÁREA III', 'ÁREA IV', 'ÁREA V'];
 
-    // P2
-    DEFAULT_P2.forEach((d) => {
-      const s = slots.find((x) => x.slotId === d.slotId);
-      if (!s) return;
-      upsertBySlot(s, { policial: d.policial, policialId: undefined, situacao: 'PM ESCALADO' });
+    const availableFromConfig = (policiais || []).filter((p: any) => {
+      const isFromPelotao = String(p.equipe || '').toUpperCase().trim() === pelotao.toUpperCase();
+      const isInactive = !!findAfast(p.matricula, dataISO);
+      return isFromPelotao && !isInactive;
     });
+
+    configs.forEach(cfg => {
+      const activeMembers = cfg.members.filter(m => {
+        if (!m.policial) return false;
+        const mat = String(m.policial).split(' ').pop()?.replace(/\D/g, '');
+        const p = availableFromConfig.find(ap => String(ap.matricula).replace(/\D/g, '') === mat);
+        return !!p;
+      });
+      const totalExpected = cfg.members.filter(m => m.funcao === 'CMT' || m.funcao === 'MOT').length;
+      if (totalExpected >= 2 && activeMembers.length === 1) {
+        const mat = String(activeMembers[0].policial).split(' ').pop()?.replace(/\D/g, '');
+        const p = availableFromConfig.find(ap => String(ap.matricula).replace(/\D/g, '') === mat);
+        if (p) leftovers.push(p);
+      }
+    });
+
+    // 3. Alocação Unificada com Prioridade Estrita por Área
+    // Ordem: CPU -> EPE/CDC 1..3 -> ÁREA I..V
+    const priorityAreasOrdered = ['CPU', 'EPE/CDC 1', 'EPE/CDC 2', 'EPE/CDC 3', 'ÁREA I', 'ÁREA II', 'ÁREA III', 'ÁREA IV', 'ÁREA V'];
+
+    priorityAreasOrdered.forEach(area => {
+      ['CMT', 'MOT'].forEach(funcao => {
+        // Encontrar o slot específico para esta área e função
+        const slot = slots.find(s => s.area === area && s.funcao === funcao);
+        if (!slot) return;
+        if (finalAllocations[slot.slotId] || (slotMap[slot.slotId]?.policial && !slotMap[slot.slotId]?.id.startsWith('temp-'))) return;
+
+        // Passo A: Tentar preencher através da configuração fixa dos times (opTeams)
+        const cfg = configs.find(c => c.area === area);
+        const memberCfg = cfg?.members.find(m => m.funcao === funcao);
+
+        if (memberCfg?.policial) {
+          const mat = String(memberCfg.policial).split(' ').pop()?.replace(/\D/g, '');
+          const p = available.find(ap => String(ap.matricula).replace(/\D/g, '') === mat && !usedIds.has(ap.id));
+          if (p) {
+            finalAllocations[slot.slotId] = { policial: p.nome, policialId: p.id, situacao: 'PM ESCALADO' };
+            usedIds.add(p.id);
+            return; // Preenchido por configuração
+          }
+        }
+
+        // Passo B: Se não preencheu por config, preencher com o próximo disponível do pool geral
+        const nextAvailable = available.filter(p => !usedIds.has(p.id));
+        const nextP = nextAvailable[0]; // Pela ordenação original do pool
+        if (nextP) {
+          finalAllocations[slot.slotId] = { policial: nextP.nome, policialId: nextP.id, situacao: 'PM ESCALADO' };
+          usedIds.add(nextP.id);
+        }
+      });
+    });
+
+    // 4. Inteligência Anti-Isolamento (Varredura de guarnições incompletas nas Áreas I-V)
+    // Se sobrar alguém sozinho em uma Área (I-V), movemos para a ÁREA I como Auxiliar.
+    const soloOfficers: any[] = [];
+    (['ÁREA I', 'ÁREA II', 'ÁREA III', 'ÁREA IV', 'ÁREA V'] as const).forEach(area => {
+      const cmtSlot = slots.find(s => s.area === area && s.funcao === 'CMT');
+      const motSlot = slots.find(s => s.area === area && s.funcao === 'MOT');
+      if (!cmtSlot || !motSlot) return;
+
+      const cmt = finalAllocations[cmtSlot.slotId];
+      const mot = finalAllocations[motSlot.slotId];
+
+      // Se tiver apenas 1 pessoa na vtr (e for Área I-V)
+      if ((cmt && !mot) || (!cmt && mot)) {
+        const solo = cmt || mot;
+        soloOfficers.push({ ...solo });
+        // Remove da posição original
+        delete finalAllocations[cmtSlot.slotId];
+        delete finalAllocations[motSlot.slotId];
+      }
+    });
+
+    // 5. Realocação das Sobras (Move solitários para ÁREA I como Auxiliares)
+    const area1CmtSlot = slots.find(s => s.area === 'ÁREA I' && s.funcao === 'CMT');
+    if (area1CmtSlot) {
+      soloOfficers.forEach(p => {
+        const existing = finalAllocations[area1CmtSlot.slotId];
+        if (existing) {
+          finalAllocations[area1CmtSlot.slotId] = {
+            ...existing,
+            auxiliar: { nome: p.policial, policialId: p.policialId, situacao: 'PM ESCALADO' }
+          };
+        } else {
+          finalAllocations[area1CmtSlot.slotId] = { policial: p.policial, policialId: p.policialId, situacao: 'PM ESCALADO' };
+        }
+      });
+    }
+
+    Object.entries(finalAllocations).forEach(([slotId, data]) => {
+      const slot = slots.find(s => s.slotId === slotId);
+      if (slot) upsertBySlot(slot, data);
+    });
+
+  }
+
+  function clearArea(areaName: string) {
+    if (!confirm(`Limpar todos os registros da área ${areaName}?`)) return;
+    const areaSlots = slots.filter(s => s.area === areaName);
+    const slotIds = areaSlots.map(s => s.slotId);
+    setRows(prev => prev.filter(r => !(r.dataISO === dataISO && slotIds.includes(r.slotId || ''))));
+
+    if (areaName === 'OBSERVAÇÕES') {
+      const scKey = `${section}:${dataISO}:${pelotao || ''}`;
+      setObsCountMap(prev => {
+        const next = { ...prev };
+        delete next[scKey];
+        return next;
+      });
+    }
+  }
+
+  function clearSlot(slot: SlotDef) {
+    setRows(prev => prev.filter(r => !(r.dataISO === dataISO && r.slotId === slot.slotId)));
   }
 
   // ---------- drag & drop ----------
@@ -1274,16 +1549,16 @@ const slotMap = useMemo(() => {
         situacao: m.situacao || 'PM ESCALADO',
       });
     });
-  
+
     // marca equipe como aplicada (anti-duplicidade)
     setUsedTeams((prev) => {
       const cur = new Set(prev[teamScopeKey] || []);
       cur.add(teamKey);
       return { ...prev, [teamScopeKey]: Array.from(cur) };
     });
-}
+  }
 
-  
+
   function undoTeam(teamKey: string) {
     const teamList = opTeams[pelotao];
     if (!teamList) return;
@@ -1308,7 +1583,7 @@ const slotMap = useMemo(() => {
       return next;
     });
   }
-function swapSlots(fromSlotId: string, toSlot: SlotDef) {
+  function swapSlots(fromSlotId: string, toSlot: SlotDef) {
     const from = slotMap[fromSlotId];
     const to = slotMap[toSlot.slotId];
 
@@ -1360,20 +1635,10 @@ function swapSlots(fromSlotId: string, toSlot: SlotDef) {
         return;
       }
 
-      // se policial estiver inativo no dia, predefine a situação como AFASTAMENTO (ADM pode ajustar)
-      const a = findAfast(p.matricula, dataISO);
-      const situacao: SituacaoCadastro = a
-        ? (a.status?.toUpperCase().includes('FÉRIAS')
-            ? 'PM DE FÉRIAS'
-            : a.status?.toUpperCase().includes('LICEN')
-            ? 'PM DE LICENÇA ESPECIAL'
-            : 'PM DE ATESTADO')
-        : 'PM ESCALADO';
-
       upsertBySlot(slot, {
         policial: p.nome,
         policialId: p.id,
-        situacao,
+        // Mantém a situação atual (não preenche automaticamente por afastamentos)
       });
       return;
     }
@@ -1412,825 +1677,734 @@ function swapSlots(fromSlotId: string, toSlot: SlotDef) {
     return all.filter((t) => !usedTeamSet.has(t.key));
   }, [opTeams, pelotao, usedTeamSet, section, listMode]);
 
-  // selectOptions para dropdown interno do slot (somente no modo individual)
+  // selectOptions para dropdown interno do slot (sempre usa o pool total da seção)
   const selectOptions = useMemo(() => {
-    return policePool.map((p: any) => ({
+    return basePolicePool.map((p: any) => ({
       id: p.id,
       nome: p.nome,
       matricula: p.matricula,
       inactive: p.__inactive,
       afast: p.__afast,
     }));
-  }, [policePool]);
+  }, [basePolicePool]);
 
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4">
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between flex-wrap gap-3">
+    <div className="space-y-6">
+      {/* CARD DE AÇÕES E INFO */}
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
-            <div className="text-sm font-black uppercase text-slate-900">Registrar Escala (ADM)</div>
-            <div className="text-xs text-slate-600">
-              Preencha por <b>Seções de Trabalho</b>. Na Operacional, selecione o <b>pelotão</b> e use <b>Individual</b> ou <b>Equipe</b> para arrastar para os slots.
-            </div>
+            <h2 className="text-lg font-bold text-slate-800 uppercase flex items-center gap-2">
+              <span className="material-icons-round text-blue-600">edit_note</span>
+              Registrar Escala (ADM)
+            </h2>
+            <p className="text-slate-500 text-sm mt-1 max-w-2xl">
+              Selecione o <b>pelotão</b> e a <b>seção</b>. Use os cards para arrastar policiais ou equipes para os slots de destino.
+            </p>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap">
             <button
-              className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-xs font-black hover:bg-gray-50"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-xs font-black hover:bg-slate-100 transition-all active:scale-95"
               onClick={() => autoFill()}
               type="button"
             >
+              <span className="material-icons-round text-base">auto_fix_high</span>
               AUTO-PREENCHER
             </button>
             <button
-              className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-xs font-black hover:bg-gray-50"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-xs font-black hover:bg-slate-100 transition-all active:scale-95"
               onClick={() => duplicatePrevDay()}
               type="button"
             >
-              DUPLICAR DIA ANTERIOR
+              <span className="material-icons-round text-base">content_copy</span>
+              DUPLICAR ANTERIOR
             </button>
             <button
-              className="px-3 py-2 rounded-lg border border-red-400 bg-white text-xs font-black text-red-700 hover:bg-red-50"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-50 border border-red-100 text-red-700 text-xs font-black hover:bg-red-100 transition-all active:scale-95"
               onClick={() => clearScope()}
               type="button"
             >
-              LIMPAR {section === 'OPERACIONAL' ? 'PELOTÃO' : 'SEÇÃO'}
+              <span className="material-icons-round text-base">delete_sweep</span>
+              LIMPAR TUDO
             </button>
           </div>
         </div>
 
-        {/* Linha: Abas + Data (alinhado) */}
-        <div className="flex items-end justify-between gap-3 flex-wrap">
-          {/* Abas */}
-          <div className="flex items-center gap-1 flex-wrap border-b border-gray-200">
+        {/* FILTROS DE SEÇÃO E DATAS */}
+        <div className="mt-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-t border-slate-100 pt-6">
+          {/* Abas Pills */}
+          <div className="flex items-center gap-1.5 p-1.5 bg-slate-100 rounded-2xl w-fit">
             {([
-              { k: 'OPERACIONAL', label: 'ESCALA OPERACIONAL' },
-              { k: 'ADJUNTOS_24X72', label: 'ESCALA ADJUNTOS' },
-              { k: 'EXPEDIENTE', label: 'ESCALA EXPEDIENTE' },
-              { k: 'DOZE_36', label: 'ESCALA 12X36' },
-              { k: 'P2', label: 'ESCALA P2' },
+              { k: 'OPERACIONAL', label: 'OPERACIONAL' },
+              { k: 'ADJUNTOS_24X72', label: 'ADJUNTOS' },
+              { k: 'EXPEDIENTE', label: 'EXPEDIENTE' },
+              { k: 'DOZE_36', label: '12X36' },
+              { k: 'P2', label: 'P2' },
             ] as const).map((t) => (
               <button
                 key={t.k}
                 type="button"
                 onClick={() => setSection(t.k as any)}
-                className={`px-3 py-2 -mb-px text-xs font-black rounded-t-lg border ${
-                  section === t.k ? 'bg-white border-gray-200 border-b-white text-slate-900' : 'bg-slate-50 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white'
-                }`}
+                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${section === t.k
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                  : 'text-slate-500 hover:text-slate-800'
+                  }`}
               >
                 {t.label}
               </button>
             ))}
           </div>
 
-          {/* Data */}
-          <div className="flex items-end gap-2">
-            <div className="min-w-[220px]">
-              <div className="text-[10px] font-black text-slate-700 uppercase mb-1">Data</div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setDataISO(shiftISODate(dataISO, -1))}
-                  className="h-10 w-10 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center"
-                  title="Dia anterior"
-                >
-                  <span className="material-icons-round text-base">chevron_left</span>
-                </button>
+          {/* Seletor de Data Premium */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Data de Referência</span>
+            <div className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-2xl">
+              <button
+                type="button"
+                onClick={() => setDataISO(shiftISODate(dataISO, -1))}
+                className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-600 shadow-sm flex items-center justify-center transition-all"
+              >
+                <span className="material-icons-round">chevron_left</span>
+              </button>
+              <div className="relative">
                 <input
                   type="date"
                   value={dataISO}
                   onChange={(e) => setDataISO(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white h-10"
+                  className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-100 outline-none w-40"
                 />
-                <button
-                  type="button"
-                  onClick={() => setDataISO(shiftISODate(dataISO, 1))}
-                  className="h-10 w-10 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center"
-                  title="Próximo dia"
-                >
-                  <span className="material-icons-round text-base">chevron_right</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setDataISO(todayISO())}
-                  className="h-10 px-3 rounded-lg border border-gray-200 bg-white text-xs font-black hover:bg-gray-50"
-                >
-                  Hoje
-                </button>
               </div>
-              {section === 'OPERACIONAL' && (
-                <div className="mt-1 text-[10px] text-slate-600 font-bold">
-                  Dia do pelotão: <span className="text-slate-900">{pelotao}</span>
-                </div>
-              )}
+              <button
+                type="button"
+                onClick={() => setDataISO(shiftISODate(dataISO, 1))}
+                className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-600 shadow-sm flex items-center justify-center transition-all"
+              >
+                <span className="material-icons-round">chevron_right</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDataISO(todayISO())}
+                className="px-4 h-10 rounded-xl bg-slate-800 text-white text-[10px] font-black uppercase hover:bg-slate-900 transition-all ml-1 shadow-md shadow-slate-200"
+              >
+                Hoje
+              </button>
             </div>
+            {section === 'OPERACIONAL' && (
+              <div className="text-[10px] text-slate-400 font-bold ml-1">
+                Ref. Pelotão: <span className="text-blue-600 uppercase tracking-wider">{pelotao}</span>
+              </div>
+            )}
           </div>
         </div>
-{/* Corpo */}
-        <div className="grid grid-cols-12 gap-4">
-          {/* Coluna esquerda: Pool */}
-          <div className="col-span-12 lg:col-span-4 lg:sticky lg:top-4 h-fit">
-            <div className="bg-white border border-gray-200 rounded-xl p-3">
-              {section === 'OPERACIONAL' ? (
-                <>
-                  <div className="flex items-end gap-2 flex-wrap">
-                    <div className="min-w-[180px] flex-1">
-                      <div className="text-[10px] font-black text-slate-700 uppercase mb-1">Pelotão</div>
-                      <select
-                        value={pelotao}
-                        onChange={(e) => handlePelotaoChange(e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white"
-                      >
-                        {teams.map((t) => (
-                          <option key={t.id} value={t.id}>
-                            {t.name} ({t.sigla})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="flex-1 min-w-[160px]">
-                      <div className="text-[10px] font-black text-slate-700 uppercase mb-1">Busca</div>
-                      <div className="relative">
-                        <input
-                          value={search}
-                          onChange={(e) => setSearch(e.target.value)}
-                          placeholder="nome ou RG..."
-                          className="w-full rounded-lg border border-gray-300 pl-3 pr-8 py-2 text-sm bg-white"
-                        />
-                        {search && (
-                          <button
-                            onClick={() => setSearch('')}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                          >
-                            <span className="material-icons-round text-sm">cancel</span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Tabs: Individual | Equipe | Auxiliar */}
-                  <div className="mt-3 flex items-center gap-2 flex-wrap">
-                    <button
-                      type="button"
-                      onClick={() => setListMode('INDIVIDUAL')}
-                      className={`px-3 py-2 rounded-lg text-xs font-black border ${listMode === 'INDIVIDUAL' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200'}`}
-                    >
-                      Individual
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setListMode('EQUIPE')}
-                      className={`px-3 py-2 rounded-lg text-xs font-black border ${listMode === 'EQUIPE' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200'}`}
-                    >
-                      Equipe (padrão)
-                    </button>
-                    <div
-                      draggable
-                      onDragStart={(e) => setDragPayload(e, { kind: 'auxiliar' })}
-                      className="px-3 py-2 rounded-lg border-2 border-dashed border-indigo-400 bg-indigo-50 text-xs font-black text-indigo-700 cursor-grab active:cursor-grabbing flex items-center gap-2"
-                    >
-                      <span className="material-icons-round text-sm">add_circle</span>
-                      Auxiliar (Arraste)
-                    </div>
-                  </div>
-
-                  <div className="mt-2 text-[11px] text-slate-600">
-                    {listMode === 'INDIVIDUAL' ? (
-                      <>Arraste um <b>policial</b> para um slot. Policiais <b>INATIVOS</b> aparecem no final.</>
-                    ) : (
-                      <>Arraste uma <b>equipe</b> para preencher automaticamente os slots daquela área (CMT/MOT/AUX/OBS conforme o padrão).</>
-                    )}
-                  </div>
-
-                  {/* Filtros rápidos + contadores */}
-                  <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
-                    <div className="text-[11px] text-slate-700">
-                      <b>{poolCounts.disponiveis}</b> disponíveis · <b>{poolCounts.jaEscalados}</b> já escalados · <b>{poolCounts.inativos}</b> inativos
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setPoolFilter('TODOS')}
-                        className={`px-3 py-1.5 rounded-lg text-[11px] font-black border ${poolFilter === 'TODOS' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200'}`}
-                      >
-                        Todos
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPoolFilter('DISPONIVEIS')}
-                        className={`px-3 py-1.5 rounded-lg text-[11px] font-black border ${poolFilter === 'DISPONIVEIS' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200'}`}
-                      >
-                        Apenas disponíveis
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPoolFilter('INATIVOS')}
-                        className={`px-3 py-1.5 rounded-lg text-[11px] font-black border ${poolFilter === 'INATIVOS' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200'}`}
-                      >
-                        Inativos
-                      </button>
-                    </div>
-                  </div>
-
-
-                  <div className="mt-2 max-h-[520px] overflow-auto pr-1 space-y-2">
-                    {listMode === 'INDIVIDUAL' ? (
-                      policePool.length === 0 ? (
-                        <div className="text-sm text-slate-600">Nenhum policial no pelotão.</div>
-                      ) : (
-                        policePool.map((p: any) => {
-                          const a = p.__afast;
-                          const inactive = !!p.__inactive;
-                          return (
-                            <div
-                              key={p.id}
-                              draggable
-                              onDragStart={(e) => onDragStartPool(e, p)}
-                              className={`rounded-lg border px-3 py-2 cursor-grab active:cursor-grabbing select-none
-                                ${inactive ? 'border-amber-300 bg-amber-50' : 'border-gray-200 bg-white'}
-                              `}
-                              title={inactive ? `INATIVO: ${a?.status} (${a?.inicio} → ${a?.retorno})` : 'ATIVO'}
-                            >
-                              <div className="text-xs font-black text-slate-800">{p.nome}</div>
-                              <div className="text-[11px] text-slate-600">
-                                RG {p.matricula}{' '}
-                                <span className={`ml-2 font-black ${inactive ? 'text-amber-700' : 'text-green-700'}`}>
-                                  {inactive ? 'INATIVO' : 'ATIVO'}
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        })
-                      )
-                    ) : (
-                      <div className="space-y-2">
-                        <button
-                          onClick={() => {
-                            const name = prompt('Nome da nova equipe:');
-                            if (!name) return;
-                            const area = prompt('Área (ex: ÁREA I):');
-                            if (!area) return;
-                            const newTeam = {
-                              key: 'T' + Date.now(),
-                              label: name,
-                              area: area,
-                              members: [
-                                { funcao: 'CMT', policial: '' },
-                                { funcao: 'MOT', policial: '' }
-                              ]
-                            };
-                            setOpTeams(prev => ({
-                              ...prev,
-                              [pelotao]: [...(prev[pelotao] || []), newTeam]
-                            }));
-                          }}
-                          className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-xs font-black text-gray-500 hover:border-indigo-400 hover:text-indigo-600 transition"
-                        >
-                          + CADASTRAR NOVA EQUIPE
-                        </button>
-                        {teamPool.map((t, tIdx) => (
-                          <div
-                            key={t.key}
-                            draggable
-                            onDragStart={(e) => onDragStartTeam(e, t.key)}
-                            className="rounded-lg border border-gray-200 bg-white px-3 py-2 cursor-grab active:cursor-grabbing select-none group relative"
-                            title="Arraste para preencher a área padrão da equipe"
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="text-xs font-black text-slate-800">{t.label}</div>
-                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    const newLabel = prompt('Novo nome da equipe:', t.label);
-                                    if (newLabel) {
-                                      setOpTeams(prev => ({
-                                        ...prev,
-                                        [pelotao]: prev[pelotao].map(x => x.key === t.key ? { ...x, label: newLabel } : x)
-                                      }));
-                                    }
-                                  }}
-                                  className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"
-                                >
-                                  <span className="material-icons-round text-[14px]">edit</span>
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (confirm('Excluir esta equipe?')) {
-                                      setOpTeams(prev => ({
-                                        ...prev,
-                                        [pelotao]: prev[pelotao].filter(x => x.key !== t.key)
-                                      }));
-                                    }
-                                  }}
-                                  className="p-1 text-red-600 hover:bg-red-50 rounded"
-                                >
-                                  <span className="material-icons-round text-[14px]">delete</span>
-                                </button>
-                              </div>
-                            </div>
-                            <div className="text-[11px] text-slate-600">
-                              Área: <b>{t.area}</b>
-                            </div>
-                            <div className="text-[11px] text-slate-600 mt-1 space-y-1">
-                              {t.members.map((m: any, i: number) => (
-                                <div key={i} className="flex items-center gap-1">
-                                  <b className="w-8">{m.funcao}:</b>
-                                  <input
-                                    type="text"
-                                    value={m.policial || ''}
-                                    onChange={(e) => {
-                                      const val = e.target.value;
-                                      setOpTeams(prev => ({
-                                        ...prev,
-                                        [pelotao]: prev[pelotao].map(x => x.key === t.key ? {
-                                          ...x,
-                                          members: x.members.map((mm, ii) => ii === i ? { ...mm, policial: val } : mm)
-                                        } : x)
-                                      }));
-                                    }}
-                                    className="flex-1 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-indigo-500 outline-none px-1"
-                                    placeholder="Nome do PM..."
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
-                                </div>
-                              ))}
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  const func = prompt('Nova função (ex: AUX):');
-                                  if (func) {
-                                    setOpTeams(prev => ({
-                                      ...prev,
-                                      [pelotao]: prev[pelotao].map(x => x.key === t.key ? {
-                                        ...x,
-                                        members: [...x.members, { funcao: func.toUpperCase(), policial: '' }]
-                                      } : x)
-                                    }));
-                                  }
-                                }}
-                                className="text-[9px] text-indigo-600 font-bold hover:underline"
-                              >
-                                + ADICIONAR COMPONENTE
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  
-                  {section === 'OPERACIONAL' && listMode === 'EQUIPE' && (usedTeams[teamScopeKey] || []).length > 0 && (
-                    <div className="mt-3 p-2 rounded-lg border border-gray-200 bg-slate-50">
-                      <div className="text-[10px] font-black uppercase text-slate-700 mb-1">Equipes aplicadas (anti-duplicidade)</div>
-                      <div className="space-y-1">
-                        {(usedTeams[teamScopeKey] || []).map((k) => {
-                          const t = (opTeams[pelotao] || []).find((x) => x.key === k);
-                          return (
-                            <div key={k} className="flex items-center justify-between gap-2 text-[11px]">
-                              <div className="font-bold text-slate-800">{t?.label || k}</div>
-                              <button
-                                type="button"
-                                onClick={() => undoTeam(k)}
-                                className="px-2 py-1 rounded-lg border border-gray-200 bg-white text-[10px] font-black hover:bg-gray-50"
-                              >
-                                DESFAZER
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="mt-1 text-[10px] text-slate-600">
-                        Dica: desfazer limpa a área e devolve a equipe para a lista.
-                      </div>
-                    </div>
-                  )}
-
-</div>
-                </>
-              ) : section === 'ADJUNTOS_24X72' ? (
-                <>
-                  <div className="text-xs font-black uppercase text-slate-800 mb-2">Lista (referência)</div>
-                  <div className="text-[11px] text-slate-600 mb-3">
-                    Lista de adjuntos para controle e remanejamento.
-                  </div>
-                  <div className="space-y-2">
-                    {[
-                      { nome: '1º SGT MACHADO', rg: '27.122', pel: 'A' },
-                      { nome: '3º SGT MORENO', rg: '31.600', pel: 'B' },
-                      { nome: '3º SGT MONTEIRO', rg: '27.310', pel: 'C' },
-                      { nome: 'SD COIMBRA', rg: '39.780', pel: 'D' },
-                    ].map((adj, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-lg border border-gray-200 bg-white px-3 py-2 select-none"
-                      >
-                        <div className="text-xs font-black text-slate-800">{adj.nome}</div>
-                        <div className="text-[10px] text-slate-600 font-bold uppercase tracking-tight">
-                          PELOTÃO {adj.pel} | RG {adj.rg}
-                        </div>
-                      </div>
+      </div>
+      {/* Corpo */}
+      <div className="grid grid-cols-12 gap-4">
+        {/* Coluna esquerda: Pool */}
+        <div className="col-span-12 lg:col-span-4 lg:sticky lg:top-4 h-fit">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+            <div className="flex flex-col gap-4">
+              {section === 'OPERACIONAL' && (
+                <div className="flex-1">
+                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Pelotão Ativo</div>
+                  <select
+                    value={pelotao}
+                    onChange={(e) => handlePelotaoChange(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold bg-slate-50 text-slate-800 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                  >
+                    {teams.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name} ({t.sigla})
+                      </option>
                     ))}
-                  </div>
-                </>
-              ) : section === 'P2' ? (
-                <>
-                  <div className="text-xs font-black uppercase text-slate-800 mb-2">Lista (referência)</div>
-                  <div className="text-[11px] text-slate-600 mb-3">
-                    Lista de policiais que compõem o serviço de inteligência.
-                  </div>
-                  <div className="space-y-2">
-                    {[
-                      { nome: '1º SGT LÚCIO', rg: '28493' },
-                      { nome: '2º SGT EDER', rg: '33.150' },
-                      { nome: '3º SGT SANDER', rg: '35.534' },
-                      { nome: 'CB PASSOS', rg: '38.183' },
-                      { nome: 'CB WARTELOO', rg: '37.190' },
-                      { nome: 'CB SENA', rg: '36.713' },
-                      { nome: 'CB MENDES', rg: '37.829' },
-                      { nome: '3º SGT NETTO', rg: '34.686' },
-                      { nome: 'CB PADILHA', rg: '37.932' },
-                    ].map((p, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-lg border border-gray-200 bg-white px-3 py-2 select-none"
-                      >
-                        <div className="text-xs font-black text-slate-800">{p.nome}</div>
-                        <div className="text-[10px] text-slate-600 font-bold uppercase tracking-tight">
-                          RG {p.rg}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : section === 'DOZE_36' ? (
-                <>
-                  <div className="text-xs font-black uppercase text-slate-800 mb-2">Lista (referência)</div>
-                  <div className="text-[11px] text-slate-600 mb-3">
-                    Lista de policiais da escala 12x36.
-                  </div>
-                  <div className="space-y-2">
-                    {[
-                      { nome: '1º TEN KLEBER', rg: '28905' },
-                      { nome: '3º SGT WALACE', rg: '34208' },
-                      { nome: '1º SGT JHONATAN', rg: '31853' },
-                      { nome: '2º SGT LEUCIONE', rg: '30.245' },
-                    ].map((p, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-lg border border-gray-200 bg-white px-3 py-2 select-none"
-                      >
-                        <div className="text-xs font-black text-slate-800">{p.nome}</div>
-                        <div className="text-[10px] text-slate-600 font-bold uppercase tracking-tight">
-                          RG {p.rg}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="text-xs font-black uppercase text-slate-800 mb-2">Lista (referência)</div>
-
-                  {section === 'EXPEDIENTE' ? (
-                    <>
-                      <div className="flex items-end gap-2 flex-wrap">
-                        <div className="flex-1 min-w-[160px]">
-                          <div className="text-[10px] font-black text-slate-700 uppercase mb-1">Busca</div>
-                          <div className="relative">
-                            <input
-                              value={search}
-                              onChange={(e) => setSearch(e.target.value)}
-                              placeholder="nome ou RG..."
-                              className="w-full rounded-lg border border-gray-300 pl-3 pr-8 py-2 text-sm bg-white"
-                            />
-                            {search && (
-                              <button
-                                onClick={() => setSearch('')}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                                type="button"
-                              >
-                                <span className="material-icons-round text-sm">cancel</span>
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Contadores + Filtros */}
-                      <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
-                        <div className="text-[11px] text-slate-700">
-                          <b>{poolCounts.disponiveis}</b> disponíveis · <b>{poolCounts.jaEscalados}</b> já escalados · <b>{poolCounts.inativos}</b> inativos
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setPoolFilter('TODOS')}
-                            className={`px-3 py-1.5 rounded-lg text-[11px] font-black border ${poolFilter === 'TODOS' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200'}`}
-                          >
-                            Todos
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setPoolFilter('DISPONIVEIS')}
-                            className={`px-3 py-1.5 rounded-lg text-[11px] font-black border ${poolFilter === 'DISPONIVEIS' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200'}`}
-                          >
-                            Apenas disponíveis
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setPoolFilter('INATIVOS')}
-                            className={`px-3 py-1.5 rounded-lg text-[11px] font-black border ${poolFilter === 'INATIVOS' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200'}`}
-                          >
-                            Inativos
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="mt-2 max-h-[520px] overflow-auto pr-1 space-y-2">
-                        {policePool.length === 0 ? (
-                          <div className="text-sm text-slate-600">Nenhum policial encontrado para esta seção.</div>
-                        ) : (
-                          policePool.map((p: any) => {
-                            const a = p.__afast;
-                            const inactive = !!p.__inactive;
-                            const already = !!p.__already;
-                            return (
-                              <div
-                                key={p.id}
-                                draggable={!already}
-                                onDragStart={(e) => !already && onDragStartPool(e, p)}
-                                className={`rounded-xl border px-3 py-2 cursor-${already ? 'not-allowed' : 'grab'} active:cursor-grabbing ${
-                                  inactive ? 'border-red-200 bg-red-50/40' : already ? 'border-slate-200 bg-slate-50/60 opacity-60' : 'border-gray-200 bg-white'
-                                }`}
-                                title={already ? 'Já escalado nesta data/seção' : 'Arraste para um slot'}
-                              >
-                                <div className="flex items-start justify-between gap-2">
-                                  <div>
-                                    <div className="text-xs font-black uppercase text-slate-800">{p.nome}</div>
-                                    <div className="text-[10px] text-slate-600 font-bold uppercase tracking-tight">
-                                      RG {p.matricula || p.rg || '-'}
-                                    </div>
-                                  </div>
-                                  <div className="flex flex-col items-end gap-1">
-                                    {inactive ? (
-                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-red-600 text-white">INATIVO</span>
-                                    ) : (
-                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-green-600 text-white">ATIVO</span>
-                                    )}
-                                    {already && (
-                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-700 text-white">JÁ ESCALADO</span>
-                                    )}
-                                  </div>
-                                </div>
-                                {inactive && a && (
-                                  <div className="mt-1 text-[10px] text-red-700 font-bold">
-                                    {String(a.status || '').toUpperCase()} · {a.inicio} → {a.retorno}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })
-                        )}
-                      </div>
-
-                      <div className="mt-2 text-[11px] text-slate-600">
-                        Dica: Policiais <b>já escalados</b> aparecem marcados e não podem ser arrastados novamente (evita duplicidade).
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-[11px] text-slate-600">
-                      Para esta seção, o cadastro é <b>individual</b>. Use <b>Auto-preencher</b> para manter o padrão e ajuste quando necessário.
-                    </div>
-                  )}
-                </>
+                  </select>
+                </div>
               )}
 
-              {section === 'OPERACIONAL' && validation && (
-                <div className="mt-4 p-2 rounded-lg border border-gray-200 bg-slate-50">
-                  <div className="text-[10px] font-black uppercase text-slate-700 mb-1">Validação inteligente</div>
-                  <div className="space-y-1">
-                    {validation.map((it, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-[11px]">
-                        <span className={`inline-flex w-5 h-5 items-center justify-center rounded-full text-[10px] font-black ${
-                          it.kind === 'ok' ? 'bg-green-600 text-white' : it.kind === 'warn' ? 'bg-amber-500 text-white' : 'bg-red-600 text-white'
-                        }`}>
-                          {it.kind === 'ok' ? '✓' : it.kind === 'warn' ? '!' : '×'}
-                        </span>
-                        <span className="text-slate-800">{it.label}</span>
+              <div className="flex-1">
+                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Busca Rápida</div>
+                <div className="relative group">
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar por nome ou RG..."
+                    className="w-full rounded-xl border border-slate-200 pl-10 pr-10 py-2.5 text-sm font-medium bg-slate-50 text-slate-800 focus:border-blue-400 focus:ring-2 focus:ring-blue-50 outline-none transition-all"
+                  />
+                  <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg group-focus-within:text-blue-500 transition-colors">search</span>
+                  {search && (
+                    <button
+                      onClick={() => setSearch('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      <span className="material-icons-round text-lg">cancel</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {section === 'OPERACIONAL' && (
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Modo de Escala</span>
+                <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl">
+                  <button
+                    type="button"
+                    onClick={() => setListMode('INDIVIDUAL')}
+                    className={`flex-1 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${listMode === 'INDIVIDUAL' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                  >
+                    Individual
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setListMode('EQUIPE')}
+                    className={`flex-1 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${listMode === 'EQUIPE' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                  >
+                    Equipe
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Filtros Rápidos</span>
+                <div className="text-[10px] text-slate-500 font-bold">
+                  {poolCounts.disponiveis} disponíveis
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setPoolFilter('TODOS')}
+                  className={`flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${poolFilter === 'TODOS' ? 'bg-slate-800 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}
+                >
+                  Todos
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPoolFilter('DISPONIVEIS')}
+                  className={`flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${poolFilter === 'DISPONIVEIS' ? 'bg-slate-800 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}
+                >
+                  Disponíveis
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPoolFilter('INATIVOS')}
+                  className={`flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${poolFilter === 'INATIVOS' ? 'bg-slate-800 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}
+                >
+                  Inativos
+                </button>
+              </div>
+            </div>
+
+
+            <div className="mt-2 max-h-[520px] overflow-auto pr-1 space-y-2">
+              {(listMode === 'INDIVIDUAL' || section !== 'OPERACIONAL') ? (
+                policePool.length === 0 ? (
+                  <div className="text-sm text-slate-600">Nenhum policial encontrado para esta seção.</div>
+                ) : (
+                  policePool.map((p: any) => {
+                    const a = p.__afast;
+                    const inactive = !!p.__inactive;
+                    const already = !!p.__already;
+                    return (
+                      <div
+                        key={p.id}
+                        draggable={!already}
+                        onDragStart={(e) => !already && onDragStartPool(e, p)}
+                        className={`rounded-xl border px-3 py-2 cursor-${already ? 'not-allowed' : 'grab'} active:cursor-grabbing transition-all hover:shadow-md
+                                ${inactive ? 'border-red-200 bg-red-50/40' : already ? 'border-slate-200 bg-slate-50/60 opacity-60' : 'border-gray-200 bg-white'}
+                              `}
+                        title={already ? 'Já escalado nesta data/seção' : 'Arraste para um slot'}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <div className="text-xs font-black uppercase text-slate-800">{p.nome}</div>
+                            <div className="text-[10px] text-slate-600 font-bold uppercase tracking-tight">
+                              RG {p.matricula || p.rg || '-'}
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end gap-1">
+                            {renderStatusBadge(inactive, already)}
+                          </div>
+                        </div>
+                        {inactive && a && (
+                          <div className="mt-1 text-[10px] text-red-700 font-bold">
+                            {String(a.status || '').toUpperCase()} · {a.inicio} → {a.retorno}
+                          </div>
+                        )}
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })
+                )
+              ) : (
+                <div className="space-y-2">
+                  <button
+                    onClick={() => {
+                      const name = prompt('Nome da nova equipe:');
+                      if (!name) return;
+                      const area = prompt('Área (ex: ÁREA I):');
+                      if (!area) return;
+                      const newTeam = {
+                        key: 'T' + Date.now(),
+                        label: name,
+                        area: area,
+                        members: [
+                          { funcao: 'CMT', policial: '' },
+                          { funcao: 'MOT', policial: '' }
+                        ]
+                      };
+                      setOpTeams(prev => ({
+                        ...prev,
+                        [pelotao]: [...(prev[pelotao] || []), newTeam]
+                      }));
+                    }}
+                    className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-xs font-black text-gray-500 hover:border-indigo-400 hover:text-indigo-600 transition"
+                  >
+                    + CADASTRAR NOVA EQUIPE
+                  </button>
+                  {teamPool.map((t) => (
+                    <div
+                      key={t.key}
+                      draggable
+                      onDragStart={(e) => onDragStartTeam(e, t.key)}
+                      className="rounded-lg border border-gray-200 bg-white px-3 py-2 cursor-grab active:cursor-grabbing select-none group relative"
+                      title="Arraste para preencher a área padrão da equipe"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs font-black text-slate-800">{t.label}</div>
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const newLabel = prompt('Novo nome da equipe:', t.label);
+                              if (newLabel) {
+                                setOpTeams(prev => ({
+                                  ...prev,
+                                  [pelotao]: prev[pelotao].map(x => x.key === t.key ? { ...x, label: newLabel } : x)
+                                }));
+                              }
+                            }}
+                            className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"
+                          >
+                            <span className="material-icons-round text-[14px]">edit</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm('Excluir esta equipe?')) {
+                                setOpTeams(prev => ({
+                                  ...prev,
+                                  [pelotao]: prev[pelotao].filter(x => x.key !== t.key)
+                                }));
+                              }
+                            }}
+                            className="p-1 text-red-600 hover:bg-red-50 rounded"
+                          >
+                            <span className="material-icons-round text-[14px]">delete</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="text-[11px] text-slate-600">
+                        Área: <b>{t.area}</b>
+                      </div>
+                      <div className="text-[11px] text-slate-600 mt-1 space-y-1">
+                        {t.members.map((m: any, i: number) => (
+                          <div key={i} className="flex items-center gap-1">
+                            <b className="w-8">{m.funcao}:</b>
+                            <input
+                              type="text"
+                              value={m.policial || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setOpTeams(prev => ({
+                                  ...prev,
+                                  [pelotao]: prev[pelotao].map(x => x.key === t.key ? {
+                                    ...x,
+                                    members: x.members.map((mm, ii) => ii === i ? { ...mm, policial: val } : mm)
+                                  } : x)
+                                }));
+                              }}
+                              className="flex-1 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-indigo-500 outline-none px-1"
+                              placeholder="Nome do PM..."
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        ))}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const func = prompt('Nova função (ex: AUX):');
+                            if (func) {
+                              setOpTeams(prev => ({
+                                ...prev,
+                                [pelotao]: prev[pelotao].map(x => x.key === t.key ? {
+                                  ...x,
+                                  members: [...x.members, { funcao: func.toUpperCase(), policial: '' }]
+                                } : x)
+                              }));
+                            }
+                          }}
+                          className="text-[9px] text-indigo-600 font-bold hover:underline"
+                        >
+                          + ADICIONAR COMPONENTE
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Coluna direita: Slots */}
-          <div className="col-span-12 lg:col-span-8">
-            <div className="bg-white border border-gray-200 rounded-xl p-3">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <div className="text-xs font-black uppercase text-slate-800">
-                  {section === 'OPERACIONAL'
-                    ? `Slots do PELOTÃO ${pelotao} — ${dataISO}`
-                    : `Slots — ${dataISO}`}
+            {section === 'OPERACIONAL' && listMode === 'EQUIPE' && (usedTeams[teamScopeKey] || []).length > 0 && (
+              <div className="mt-3 p-2 rounded-lg border border-gray-200 bg-slate-50">
+                <div className="text-[10px] font-black uppercase text-slate-700 mb-1">Equipes aplicadas (anti-duplicidade)</div>
+                <div className="space-y-1">
+                  {(usedTeams[teamScopeKey] || []).map((k) => {
+                    const t = (opTeams[pelotao] || []).find((x) => x.key === k);
+                    return (
+                      <div key={k} className="flex items-center justify-between gap-2 text-[11px]">
+                        <div className="font-bold text-slate-800">{t?.label || k}</div>
+                        <button
+                          type="button"
+                          onClick={() => undoTeam(k)}
+                          className="px-2 py-1 rounded-lg border border-gray-200 bg-white text-[10px] font-black hover:bg-gray-50"
+                        >
+                          DESFAZER
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="text-[11px] text-slate-600">
-                  Dica: arraste para preencher / trocar rapidamente.
+                <div className="mt-1 text-[10px] text-slate-600">
+                  Dica: desfazer limpa a área e devolve a equipe para a lista.
                 </div>
               </div>
+            )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {slots.map((s) => {
-                  const r = slotMap[s.slotId];
-                  const isSelected = selectedSlotId === s.slotId;
-                  const tone = slotTone(r?.situacao);
-                  const isFullWidth = (section === 'P2' && s.funcao === 'ANÁLISE') || (section === 'ADJUNTOS_24X72');
+            {section === 'OPERACIONAL' && validation && (
+              <div className="mt-4 p-2 rounded-lg border border-gray-200 bg-slate-50">
+                <div className="text-[10px] font-black uppercase text-slate-700 mb-1">Validação inteligente</div>
+                <div className="space-y-1">
+                  {validation.map((it, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-[11px]">
+                      <span className={`inline-flex w-5 h-5 items-center justify-center rounded-full text-[10px] font-black ${it.kind === 'ok' ? 'bg-green-600 text-white' : it.kind === 'warn' ? 'bg-amber-500 text-white' : 'bg-red-600 text-white'
+                        }`}>
+                        {it.kind === 'ok' ? '✓' : it.kind === 'warn' ? '!' : '×'}
+                      </span>
+                      <span className="text-slate-800">{it.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
-                  return (
-                    <div
-                      key={s.slotId}
-                      onClick={() => selectSlot(s.slotId)}
-                      onDragOver={prevent}
-                      onDrop={(e) => onDropOnSlot(e, s)}
-                      className={`rounded-xl border p-3 transition
-                        ${isSelected ? 'ring-2 ring-green-200 border-green-700' : 'border-gray-200'}
-                        ${r ? tone.wrap : ''}
-                        ${isFullWidth ? 'md:col-span-2' : ''}
-                      `}
-                    >
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <div className="text-xs font-black uppercase text-slate-800">{s.title}</div>
-                        <span className={`px-2 py-1 rounded-full text-[10px] font-black ${tone.badge}`}>
-                          {r?.situacao || '—'}
+        {/* Coluna direita: Slots */}
+        <div className="col-span-12 lg:col-span-8">
+          <div className="bg-white border border-gray-200 rounded-xl p-3">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="text-xs font-black uppercase text-slate-800">
+                {section === 'OPERACIONAL'
+                  ? `Slots do PELOTÃO ${pelotao} — ${dataISO}`
+                  : `Slots — ${dataISO}`}
+              </div>
+              <div className="text-[11px] text-slate-600">
+                Dica: arraste para preencher / trocar rapidamente.
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Array.from(new Set(slots.map(s => s.area))).map((areaName) => {
+                const areaSlots = slots.filter(s => s.area === areaName);
+                const isEpeOrArea = areaName?.includes('ÁREA') || areaName?.includes('EPE') || areaName === 'CPU';
+
+                return (
+                  <div
+                    key={areaName}
+                    className="rounded-xl border-2 border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col"
+                  >
+                    {/* HEADER DA ÁREA */}
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="material-icons-round text-slate-400 text-lg">shield</span>
+                        <span className="text-xs font-black uppercase text-slate-800 tracking-wider">
+                          {areaName}
                         </span>
                       </div>
-
-                      {/* Conteúdo do slot */}
-                      {!r?.policial && !r?.situacao && !r?.auxiliar ? (
-                        <div className="text-sm text-slate-500">Solte aqui</div>
-                      ) : (
-                        <div className="space-y-2">
-                          {/* Titular (CMT/MOT) */}
-                          {(r?.policial || r?.situacao) && (
-                            <div
-                              draggable
-                              onDragStart={(e) => onDragStartSlot(e, s.slotId)}
-                              className="rounded-lg border border-gray-200 bg-white px-3 py-2 cursor-grab active:cursor-grabbing"
-                              title="Arraste para trocar de slot"
+                      <div className="flex items-center gap-1">
+                        {/* MENU DROPDOWN DE AÇÕES */}
+                        <div className="relative group">
+                          <button className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-200 transition-all opacity-0 group-hover:opacity-100 lg:opacity-100">
+                            <span className="material-icons-round text-lg">more_vert</span>
+                          </button>
+                          <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-lg shadow-xl py-2 z-50 invisible group-hover:visible animate-in fade-in zoom-in-95 duration-150">
+                            <button
+                              onClick={() => clearArea(areaName || '')}
+                              className="w-full px-4 py-2 text-left text-[11px] font-black text-red-600 hover:bg-red-50 flex items-center gap-2"
                             >
-                              {shouldShowNameInSlot(r?.situacao) ? (
-                                <div className="text-xs font-black text-slate-800">{r?.policial || '—'}</div>
-                              ) : (
-                                <div className="text-xs font-black text-slate-800">{r?.situacao}</div>
-                              )}
+                              <span className="material-icons-round text-sm">delete_sweep</span>
+                              LIMPAR ÁREA
+                            </button>
+                            <div className="border-t border-slate-100 my-1"></div>
+                            <div className="px-4 py-1 text-[9px] font-black text-slate-400 uppercase tracking-widest">Ações Rápidas</div>
+                            {areaSlots.map(s => (
+                              <button
+                                key={s.slotId}
+                                onClick={() => clearSlot(s)}
+                                className="w-full px-4 py-2 text-left text-[10px] font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                              >
+                                <span className="material-icons-round text-[14px]">cleaning_services</span>
+                                LIMPAR {s.funcao === 'CMT' ? 'CMT' : s.funcao === 'MOT' ? 'MOT' : s.funcao}
+                              </button>
+                            ))}
 
-                              {!shouldShowNameInSlot(r?.situacao) && r?.policial ? (
-                                <div className="text-[11px] text-slate-600 mt-1">
-                                  Policial (referência): <b>{r.policial}</b>
+                            {/* NOVA OPÇÃO: LIMPAR AUXILIAR */}
+                            {(() => {
+                              if (!isEpeOrArea || areaName === 'OBSERVAÇÕES') return null;
+                              const cmtSlot = areaSlots.find(as => as.funcao === 'CMT') || areaSlots[0];
+                              const r_cmt = slotMap[cmtSlot?.slotId || ''];
+                              const hasAux = r_cmt?.auxiliar;
+
+                              if (!hasAux) return null;
+
+                              return (
+                                <>
+                                  <div className="border-t border-slate-100 my-1"></div>
+                                  <button
+                                    onClick={() => {
+                                      if (cmtSlot) upsertBySlot(cmtSlot, { auxiliar: null });
+                                    }}
+                                    className="w-full px-4 py-2 text-left text-[10px] font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                                  >
+                                    <span className="material-icons-round text-[14px]">cleaning_services</span>
+                                    LIMPAR AUXILIAR
+                                  </button>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => clearArea(areaName || '')}
+                          className="w-8 h-8 flex items-center justify-center rounded-full text-slate-300 hover:bg-red-50 hover:text-red-600 transition-all"
+                          title="Limpar Área (Atalho)"
+                        >
+                          <span className="material-icons-round text-lg">delete</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="p-4 space-y-4 flex-1 bg-slate-50/20">
+                      {/* ITERA PELOS SLOTS DA ÁREA (CMT, MOT, etc.) */}
+                      {areaSlots.map((s) => {
+                        const r = slotMap[s.slotId];
+                        const tone = slotTone(r?.situacao);
+                        const isObs = areaName === 'OBSERVAÇÕES';
+                        const label = isObs ? 'OBS:' : s.funcao === 'CMT' ? 'COMANDANTE' : s.funcao === 'MOT' ? 'MOTORISTA' : s.funcao;
+
+                        return (
+                          <div
+                            key={s.slotId}
+                            onDragOver={prevent}
+                            onDrop={(e) => onDropOnSlot(e, s)}
+                            className={`rounded-lg border-2 p-3 transition-all ${r ? tone.wrap : 'bg-white border-slate-100 border-dashed'}`}
+                          >
+                            <div className="grid grid-cols-12 gap-3 items-end">
+                              <div className="col-span-12 sm:col-span-7">
+                                <div className={`text-[10px] font-black uppercase mb-1 flex items-center gap-1 ${r ? tone.label : 'text-slate-500'}`}>
+                                  <span className="material-icons-round text-[12px] opacity-70">
+                                    {isObs ? 'visibility_off' : 'person'}
+                                  </span>
+                                  {label}
                                 </div>
-                              ) : (
-                                <div className="text-[11px] text-slate-600">
-                                  Situação: <b>{r?.situacao || 'PM ESCALADO'}</b>
-                                </div>
-                              )}
+                                <select
+                                  value={String(r?.policialId || '')}
+                                  onChange={(e) => {
+                                    const id = parseInt(e.target.value, 10);
+                                    const p = selectOptions.find((x: any) => x.id === id);
+                                    if (!p) {
+                                      upsertBySlot(s, { policial: '', policialId: undefined });
+                                      return;
+                                    }
+                                    const already = rows.find(x => x.dataISO === dataISO && (x.policialId === p.id || x.auxiliar?.policialId === p.id));
+                                    if (already && already.slotId !== s.slotId) {
+                                      alert(`Este policial já está escalado: ${already.area} - ${already.funcao}`);
+                                      return;
+                                    }
+                                    upsertBySlot(s, {
+                                      policial: p.nome,
+                                      policialId: p.id,
+                                      situacao: isObs ? 'PM DISPENSADO' : 'PM ESCALADO'
+                                    });
+                                  }}
+                                  className={`w-full rounded-lg border px-3 py-1.5 text-[11px] font-bold h-9 outline-none focus:ring-2 focus:ring-opacity-50
+                                      ${r ? 'bg-white border-transparent text-slate-900 focus:ring-white/20' : 'bg-slate-50 border-slate-200 text-slate-800 focus:ring-indigo-100'}
+                                    `}
+                                >
+                                  <option value="">Solte aqui...</option>
+                                  {selectOptions.map((p: any) => (
+                                    <option key={p.id} value={p.id}>{p.nome} — RG {p.matricula}</option>
+                                  ))}
+                                </select>
+                              </div>
+                              <div className="col-span-12 sm:col-span-5">
+                                <div className={`text-[10px] font-black uppercase mb-1 ${r ? tone.label : 'text-slate-500'}`}>SITUAÇÃO</div>
+                                <select
+                                  value={r?.situacao || (isObs ? 'PM DISPENSADO' : 'PM ESCALADO')}
+                                  onChange={(e) => upsertBySlot(s, { situacao: e.target.value as SituacaoCadastro })}
+                                  className={`w-full rounded-lg border px-2 py-1.5 text-[11px] font-bold h-9 outline-none
+                                      ${r ? 'bg-white border-transparent text-slate-900' : 'bg-slate-50 border-slate-200 text-slate-800'}
+                                    `}
+                                >
+                                  {(isObs ?
+                                    ['PM DISPENSADO', 'PM DE FÉRIAS', 'PM DE ATESTADO', 'PM DE LICENÇA ESPECIAL'] :
+                                    SITUACOES
+                                  ).map(st => (
+                                    <option key={st} value={st}>{st}</option>
+                                  ))}
+                                </select>
+                              </div>
                             </div>
-                          )}
+                          </div>
+                        );
+                      })}
 
-                          {/* Auxiliar */}
-                          {r?.auxiliar && (
+                      {areaName === 'OBSERVAÇÕES' && (
+                        <button
+                          onClick={() => {
+                            const scKey = `${section}:${dataISO}:${pelotao || ''}`;
+                            setObsCountMap(prev => ({ ...prev, [scKey]: (prev[scKey] || 3) + 1 }));
+                          }}
+                          className="w-full py-2 border-2 border-dashed border-slate-200 rounded-lg text-[10px] font-black text-slate-400 hover:border-slate-300 hover:text-slate-600 transition flex items-center justify-center gap-1"
+                        >
+                          <span className="material-icons-round text-sm">add_circle_outline</span>
+                          + ADICIONAR OBS
+                        </button>
+                      )}
+
+                      {/* LINHA 3: AUXILIAR (VINCULADO AO CMT DA ÁREA) */}
+                      {isEpeOrArea && areaName !== 'OBSERVAÇÕES' && (
+                        (() => {
+                          const cmtSlot = areaSlots.find(as => as.funcao === 'CMT') || areaSlots[0];
+                          if (!cmtSlot) return null;
+                          const r_cmt = slotMap[cmtSlot.slotId];
+                          const aux = r_cmt?.auxiliar;
+                          const tone_aux = aux ? slotTone(aux.situacao) : null;
+
+                          // Chave para persistência da visibilidade
+                          const auxKey = `${section}:${dataISO}:${pelotao || ''}:${areaName}:AUX`;
+                          const isVisible = aux || auxShowMap[auxKey];
+
+                          if (!isVisible) {
+                            return (
+                              <button
+                                onClick={() => setAuxShowMap(prev => ({ ...prev, [auxKey]: true }))}
+                                className="w-full py-2 border-2 border-dashed border-slate-200 rounded-lg text-[10px] font-black text-slate-400 hover:border-slate-300 hover:text-slate-600 transition flex items-center justify-center gap-1"
+                              >
+                                <span className="material-icons-round text-sm">add_circle_outline</span>
+                                + ADICIONAR AUX:
+                              </button>
+                            );
+                          }
+
+                          return (
                             <div
                               onDragOver={prevent}
                               onDrop={(e) => {
                                 e.preventDefault();
-                                e.stopPropagation();
                                 const payload = getDragPayload(e);
                                 if (payload?.kind === 'policial') {
-                                  const p = (policiais || []).find((x: any) => x.id === payload.policialId);
-                                  if (!p) return;
-
-                                  // Verificação de duplicidade
-                                  const alreadyEscalated = rows.find(r => r.dataISO === dataISO && (r.policialId === p.id || r.auxiliar?.policialId === p.id));
-                                  if (alreadyEscalated) {
-                                    alert(`Este policial já está escalado em outro slot: ${alreadyEscalated.area} - ${alreadyEscalated.funcao}`);
-                                    return;
+                                  const p = policiais.find(x => x.id === payload.policialId);
+                                  if (p) {
+                                    upsertBySlot(cmtSlot, { auxiliar: { nome: p.nome, policialId: p.id, situacao: 'PM ESCALADO' } });
                                   }
-
-                                  upsertBySlot(s, {
-                                    auxiliar: { ...r.auxiliar, policialId: p.id, nome: p.nome }
-                                  });
                                 }
                               }}
-                              className="rounded-lg border border-dashed border-indigo-200 bg-indigo-50/50 px-3 py-2 relative group"
+                              className={`rounded-lg border-2 p-3 transition-all ${aux ? tone_aux?.wrap : 'bg-white border-slate-100 border-dashed'}`}
                             >
-                              <div className="flex items-center justify-between gap-2">
-                                <div className="text-[10px] font-black text-indigo-700 uppercase">Auxiliar</div>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    upsertBySlot(s, { auxiliar: null });
-                                  }}
-                                  className="text-indigo-400 hover:text-red-500"
-                                >
-                                  <span className="material-icons-round text-sm">cancel</span>
-                                </button>
+                              <div className="grid grid-cols-12 gap-3 items-end">
+                                <div className="col-span-12 sm:col-span-7">
+                                  <div className={`text-[10px] font-black uppercase mb-1 flex items-center gap-1 ${aux ? tone_aux?.label : 'text-slate-500'}`}>
+                                    <span className="material-icons-round text-[12px] opacity-70">add_moderator</span>
+                                    AUXILIAR
+                                  </div>
+                                  <div className="relative">
+                                    <select
+                                      value={String(aux?.policialId || '')}
+                                      onChange={(e) => {
+                                        const id = parseInt(e.target.value, 10);
+                                        const p = selectOptions.find((x: any) => x.id === id);
+                                        if (!p) {
+                                          upsertBySlot(cmtSlot, { auxiliar: null });
+                                          // Se limpou o policial, também pode querer ocultar o slot se o usuário fechar
+                                          return;
+                                        }
+                                        const already = rows.find(x => x.dataISO === dataISO && (x.policialId === p.id || x.auxiliar?.policialId === p.id));
+                                        if (already) {
+                                          alert(`Este policial já está escalado.`);
+                                          return;
+                                        }
+                                        upsertBySlot(cmtSlot, { auxiliar: { nome: p.nome, policialId: p.id, situacao: 'PM ESCALADO' } });
+                                      }}
+                                      className={`w-full rounded-lg border px-3 py-1.5 text-[11px] font-bold h-9 outline-none focus:ring-2 focus:ring-opacity-50
+                                          ${aux ? 'bg-white border-transparent text-slate-900' : 'bg-slate-50 border-slate-200 text-slate-800'}
+                                        `}
+                                    >
+                                      <option value="">Solte aqui...</option>
+                                      {selectOptions.map((p: any) => (
+                                        <option key={p.id} value={p.id}>{p.nome} — RG {p.matricula}</option>
+                                      ))}
+                                    </select>
+                                    <button
+                                      onClick={() => {
+                                        upsertBySlot(cmtSlot, { auxiliar: null });
+                                        setAuxShowMap(prev => {
+                                          const next = { ...prev };
+                                          delete next[auxKey];
+                                          return next;
+                                        });
+                                      }}
+                                      className="absolute right-8 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500"
+                                      title="Remover Auxiliar"
+                                    >
+                                      <span className="material-icons-round text-sm">cancel</span>
+                                    </button>
+                                  </div>
+                                </div>
+                                <div className="col-span-12 sm:col-span-5">
+                                  <div className={`text-[10px] font-black uppercase mb-1 ${aux ? tone_aux?.label : 'text-slate-500'}`}>SITUAÇÃO</div>
+                                  <select
+                                    value={aux?.situacao || 'PM ESCALADO'}
+                                    onChange={(e) => {
+                                      if (aux) {
+                                        upsertBySlot(cmtSlot, { auxiliar: { ...aux, situacao: e.target.value as any } });
+                                      }
+                                    }}
+                                    className={`w-full rounded-lg border px-2 py-1.5 text-[11px] font-bold h-9 outline-none
+                                        ${aux ? 'bg-white border-transparent text-slate-900' : 'bg-slate-50 border-slate-200 text-slate-800'}
+                                      `}
+                                  >
+                                    {SITUACOES.map(st => (
+                                      <option key={st} value={st}>{st}</option>
+                                    ))}
+                                  </select>
+                                </div>
                               </div>
-                              {r.auxiliar.nome ? (
-                                <div className="text-xs font-bold text-slate-800">{r.auxiliar.nome}</div>
-                              ) : (
-                                <div className="text-[11px] text-indigo-400 italic">Arraste um policial aqui</div>
-                              )}
                             </div>
-                          )}
-                        </div>
+                          );
+                        })()
                       )}
-
-                      {/* Controles rápidos (dropdown) */}
-                      <div className="mt-3 grid grid-cols-12 gap-2 items-end">
-                        <div className="col-span-7">
-                          <div className="text-[10px] font-black text-slate-700 uppercase mb-1">Policial</div>
-                          <select
-                            value={String(r?.policialId || '')}
-                            onChange={(e) => {
-                              const id = parseInt(e.target.value, 10);
-                              const p = selectOptions.find((x: any) => x.id === id);
-                              if (!p) return;
-
-                              const a = p.afast;
-                              const situacao: SituacaoCadastro = a
-                                ? (a.status?.toUpperCase().includes('FÉRIAS')
-                                    ? 'PM DE FÉRIAS'
-                                    : a.status?.toUpperCase().includes('LICEN')
-                                    ? 'PM DE LICENÇA ESPECIAL'
-                                    : 'PM DE ATESTADO')
-                                : (r?.situacao || 'PM ESCALADO');
-
-                              upsertBySlot(s, {
-                                policial: p.nome,
-                                policialId: p.id,
-                                situacao,
-                              });
-                            }}
-                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white"
-                            disabled={section === 'OPERACIONAL' && listMode === 'EQUIPE'} // em modo equipe, prioriza drag-and-drop
-                          >
-                            <option value="">Selecione...</option>
-                            {selectOptions.map((p: any) => (
-                              <option key={p.id} value={p.id}>
-                                {p.nome} — RG {p.matricula} {p.inactive ? '• INATIVO' : '• ATIVO'}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="col-span-5">
-                          <div className="text-[10px] font-black text-slate-700 uppercase mb-1">Situação</div>
-                          <select
-                            value={r?.situacao || 'PM ESCALADO'}
-                            onChange={(e) => {
-                              const situacao = e.target.value as SituacaoCadastro;
-                              // regra: quando não escalado, não poluir leitura: mantém nome em referência mas "slot" passa a ser só situação
-                              upsertBySlot(s, {
-                                situacao,
-                              });
-                            }}
-                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white"
-                          >
-                            <option value="PM ESCALADO">PM ESCALADO</option>
-                            <option value="PM DISPENSADO">PM DISPENSADO</option>
-                            <option value="PM DE FÉRIAS">PM DE FÉRIAS</option>
-                            <option value="PM DE ATESTADO">PM DE ATESTADO</option>
-                            <option value="PM DE LICENÇA ESPECIAL">PM DE LICENÇA ESPECIAL</option>
-                          </select>
-                        </div>
-
-                        <div className="col-span-12 flex justify-end">
-                          <button
-                            type="button"
-                            className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-xs font-black hover:bg-gray-50"
-                            onClick={() => upsertBySlot(s, { policial: '', policialId: undefined, situacao: 'PM ESCALADO', obs: '' })}
-                          >
-                            Remover
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Nota operacional importante */}
-                      {section === 'OPERACIONAL' && r?.situacao && r.situacao !== 'PM ESCALADO' ? (
-                        <div className="mt-2 text-[11px] text-slate-600">
-                          Regra: quando um PM está <b>dispensado/afastado</b>, o <b>parceiro</b> pode compor outra equipe como <b>AUXILIAR</b> (ajuste por drag-and-drop).
-                        </div>
-                      ) : null}
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
+            </div>
 
-              <div className="mt-3 text-[11px] text-slate-600">
-                Próximo passo: conectar estes registros ao layout da <b>Escala Digital</b> para preencher automaticamente as células (sem alterar a estrutura visual).
-              </div>
+            <div className="mt-3 text-[11px] text-slate-600">
+              Próximo passo: conectar estes registros ao layout da <b>Escala Digital</b> para preencher automaticamente as células (sem alterar a estrutura visual).
             </div>
           </div>
         </div>
@@ -2243,35 +2417,41 @@ function TabsShell() {
   const [tab, setTab] = useState<'REGISTRAR' | 'ESCALA_DIGITAL'>('REGISTRAR');
 
   return (
-    <div className="p-4 min-h-screen bg-gray-200 font-sans">
-      <div className="max-w-[1800px] mx-auto">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div className="flex flex-col">
-            <div className="text-base font-black uppercase text-slate-800">Escala Ordinária</div>
-            <div className="text-xs text-slate-600">Painel ADM — Registrar | Escala Digital</div>
+    <div className="min-h-screen bg-slate-50 font-sans py-8 px-4">
+      <div className="max-w-7xl mx-auto space-y-6">
+
+        {/* HEADER PREMIUM */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between bg-white p-6 rounded-2xl shadow-sm border border-slate-200 gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">Escala Ordinária</h1>
+            <p className="text-slate-500 text-sm mt-1">Painel ADM — Gestão de Escalas Operacionais e Administrativas</p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center bg-slate-100 p-1.5 rounded-xl">
             <button
               onClick={() => setTab('REGISTRAR')}
-              className={`rounded-xl px-4 py-2 text-sm font-black uppercase border
-                ${tab === 'REGISTRAR' ? 'bg-green-700 text-white border-green-800' : 'bg-white text-slate-800 border-gray-300'}
-              `}
+              className={`px-6 py-2 rounded-lg text-xs font-black uppercase transition-all ${tab === 'REGISTRAR'
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                : 'text-slate-500 hover:text-slate-800'
+                }`}
             >
               Registrar
             </button>
             <button
               onClick={() => setTab('ESCALA_DIGITAL')}
-              className={`rounded-xl px-4 py-2 text-sm font-black uppercase border
-                ${tab === 'ESCALA_DIGITAL' ? 'bg-green-700 text-white border-green-800' : 'bg-white text-slate-800 border-gray-300'}
-              `}
+              className={`px-6 py-2 rounded-lg text-xs font-black uppercase transition-all ${tab === 'ESCALA_DIGITAL'
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                : 'text-slate-500 hover:text-slate-800'
+                }`}
             >
               Escala Digital
             </button>
           </div>
         </div>
 
-        {tab === 'REGISTRAR' ? <RegistrarTab /> : <EscalaDigital />}
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {tab === 'REGISTRAR' ? <RegistrarTab /> : <EscalaDigital />}
+        </div>
       </div>
     </div>
   );
@@ -2279,6 +2459,5 @@ function TabsShell() {
 
 // Componente exportado (mantém rota/integração existente)
 const EscalaOrdinaria = () => <TabsShell />;
-
 
 export default EscalaOrdinaria;
